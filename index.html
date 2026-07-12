@@ -6,7 +6,7 @@
   <meta name="description" content="CLED – Club de Liderazgo Estudiantil y Desarrollo. Formando líderes en República Dominicana.">
   <meta name="theme-color" content="#0A3D91">
   <link rel="icon" type="image/png" href="LOGO_CLED_SF.png">
-  <title>CLED – Club de Liderazgo Estudiantil y Desarrollo</title>
+  <title>CLED – Inicio</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -24,7 +24,6 @@
     a { color: inherit; text-decoration: none; }
     .container { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; }
 
-    /* Botones */
     .btn {
       display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
       padding: 0.75rem 1.8rem; border-radius: 9999px; font-weight: 600; font-size: 0.95rem;
@@ -38,6 +37,10 @@
       background: transparent; border: 2px solid #E2E8F0; color: #0F172A;
     }
     .btn-outline:hover { background: #F1F5F9; }
+    .btn-white {
+      background: transparent; border: 2px solid white; color: white;
+    }
+    .btn-white:hover { background: rgba(255,255,255,0.1); }
 
     /* Header */
     .main-header {
@@ -53,12 +56,12 @@
     .logo img { height: 40px; }
     .logo span { font-weight: 800; font-size: 1.5rem; color: #0A3D91; font-family: 'Montserrat', sans-serif; }
 
-    /* Menú hamburguesa */
     .menu-btn {
       background: none; border: none; font-size: 2rem; cursor: pointer;
       color: #0A3D91; line-height: 1; display: flex; align-items: center;
     }
-    /* Overlay del menú */
+
+    /* Menu overlay */
     .menu-overlay {
       position: fixed; inset: 0; background: rgba(10,61,145,0.98); z-index: 200;
       display: flex; align-items: center; justify-content: center;
@@ -86,8 +89,9 @@
     }
     .hero-content { position: relative; z-index: 2; padding-top: 4rem; }
     .hero h1 { font-size: clamp(2.5rem, 6vw, 4.5rem); margin-bottom: 1rem; }
+    .hero p { font-size: 1.2rem; opacity: 0.9; max-width: 600px; margin-bottom: 2rem; }
 
-    /* Secciones */
+    /* Sections */
     .section { padding: 5rem 0; }
     .section-title { font-size: 2.25rem; font-weight: 800; margin-bottom: 0.75rem; color: #0A3D91; }
 
@@ -119,7 +123,7 @@
       font-size: 1.75rem; cursor: pointer; color: #0F172A; line-height: 1;
     }
 
-    /* Formularios */
+    /* Forms */
     .form-group { margin-bottom: 1.25rem; }
     .form-group label { display: block; margin-bottom: 0.4rem; font-weight: 600; font-size: 0.9rem; }
     .form-group input, .form-group select {
@@ -133,6 +137,11 @@
     .footer { background: #0F172A; color: white; padding: 3rem 0; margin-top: 4rem; }
     .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; }
 
+    /* Buscador */
+    .search-results { background: white; border-radius: 8px; margin-top: 0.5rem; text-align: left; }
+    .search-results div { padding: 0.5rem 1rem; cursor: pointer; }
+    .search-results div:hover { background: #F1F5F9; }
+
     @media (max-width: 768px) {
       .menu-overlay a { font-size: 1.4rem; }
     }
@@ -143,11 +152,11 @@
   <header class="main-header">
     <div class="header-inner">
       <div class="logo">
-        <img src="LOGO_CLED.png" alt="CLED Logo">
+        <img src="LOGO_CLED_SF.png" alt="CLED Logo">
         <span>CLED</span>
       </div>
       <div style="display:flex; align-items:center; gap:1rem;">
-        <button class="btn btn-primary" id="campusBtn">Campus CLED</button>
+        <button class="btn btn-primary" id="campusBtn" onclick="window.location.href='login.html'">Campus CLED</button>
         <button class="menu-btn" id="menuBtn" aria-label="Abrir menú">☰</button>
       </div>
     </div>
@@ -157,59 +166,45 @@
   <div class="menu-overlay" id="menuOverlay">
     <button class="menu-close" id="menuClose">&times;</button>
     <nav>
-      <a href="#inicio">Inicio</a>
-      <a href="#nosotros">Nosotros</a>
-      <a href="#clubes">Clubes</a>
-      <a href="#eventos">Eventos</a>
-      <a href="#noticias">Noticias</a>
-      <a href="#galeria">Galería</a>
-      <a href="#impacto">Impacto</a>
-      <a href="#documentos">Documentos</a>
-      <a href="#validar">Validar Certificado</a>
-      <a href="#contacto">Contacto</a>
-      <a href="#faq">FAQ</a>
+      <a href="nosotros.html">Nosotros</a>
+      <a href="clubes.html">Clubes</a>
+      <a href="eventos.html">Eventos</a>
+      <a href="noticias.html">Noticias</a>
+      <a href="galeria.html">Galería</a>
+      <a href="impacto.html">Impacto</a>
+      <a href="documentos.html">Documentos</a>
+      <a href="validar.html">Validar Certificado</a>
+      <a href="contacto.html">Contacto</a>
+      <a href="faq.html">FAQ</a>
     </nav>
   </div>
 
   <!-- HERO -->
-  <section id="inicio" class="hero">
+  <section class="hero">
     <div class="container hero-content">
       <h1>Club de Liderazgo<br>Estudiantil y Desarrollo</h1>
-      <p style="font-size:1.2rem;opacity:0.9;max-width:600px;">Impulsamos el talento joven dominicano a través de la comunicación, el arte, el debate y el servicio social.</p>
-      <div style="margin-top:2rem;display:flex;gap:1rem;">
-        <button class="btn btn-gold" onclick="document.getElementById('nosotros').scrollIntoView({behavior:'smooth'})">Conoce el CLED</button>
-        <button class="btn" style="background:transparent;border:2px solid white;color:white;" id="heroCampusBtn">Iniciar Sesión</button>
+      <p>Impulsamos el talento joven dominicano a través de la comunicación, el arte, el debate y el servicio social.</p>
+      <div style="display:flex; gap:1rem; flex-wrap:wrap;">
+        <a href="nosotros.html" class="btn btn-gold">Conoce el CLED</a>
+        <a href="login.html" class="btn btn-white">Iniciar Sesión</a>
       </div>
     </div>
   </section>
 
   <!-- ESTADÍSTICAS -->
-  <section class="section" style="padding-top:2rem;padding-bottom:2rem;">
+  <section class="section" style="padding-top:2rem;padding-bottom:2rem;" id="statsSection">
     <div class="container"><div class="grid-4" id="statsContainer"></div></div>
   </section>
 
-  <!-- NOSOTROS -->
-  <section id="nosotros" class="section">
-    <div class="container">
-      <h2 class="section-title">Nosotros</h2>
-      <div id="nosotrosContent" style="max-width:800px;">
-        <h3>Historia</h3><p>Cargando...</p>
-        <h3>Misión</h3><p>Cargando...</p>
-        <h3>Visión</h3><p>Cargando...</p>
-        <h3>Valores</h3><p>Cargando...</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- CLUBES -->
+  <!-- CLUBES DESTACADOS -->
   <section id="clubes" class="section" style="background:#F8FAFC;">
     <div class="container">
-      <h2 class="section-title">Clubes</h2>
+      <h2 class="section-title">Clubes Destacados</h2>
       <div class="grid-3" id="clubesContainer"></div>
     </div>
   </section>
 
-  <!-- EVENTOS -->
+  <!-- PRÓXIMOS EVENTOS -->
   <section id="eventos" class="section">
     <div class="container">
       <h2 class="section-title">Próximos Eventos</h2>
@@ -217,64 +212,19 @@
     </div>
   </section>
 
-  <!-- NOTICIAS -->
+  <!-- NOTICIAS RECIENTES -->
   <section id="noticias" class="section" style="background:#F8FAFC;">
     <div class="container">
-      <h2 class="section-title">Noticias</h2>
+      <h2 class="section-title">Noticias Recientes</h2>
       <div class="grid-3" id="noticiasContainer"></div>
     </div>
   </section>
 
-  <!-- GALERÍA -->
-  <section id="galeria" class="section">
+  <!-- TESTIMONIOS -->
+  <section id="testimonios" class="section">
     <div class="container">
-      <h2 class="section-title">Galería</h2>
-      <div class="grid-3" id="albumesContainer"></div>
-    </div>
-  </section>
-
-  <!-- IMPACTO -->
-  <section id="impacto" class="section" style="background:#F8FAFC;">
-    <div class="container">
-      <h2 class="section-title">Impacto</h2>
-      <div class="grid-3" id="impactoContainer"></div>
-    </div>
-  </section>
-
-  <!-- DOCUMENTOS -->
-  <section id="documentos" class="section">
-    <div class="container">
-      <h2 class="section-title">Documentos Públicos</h2>
-      <div id="documentosList"></div>
-    </div>
-  </section>
-
-  <!-- VALIDAR CERTIFICADO -->
-  <section id="validar" class="section" style="background:#F8FAFC;">
-    <div class="container" style="max-width:500px;">
-      <h2 class="section-title">Validar Certificado</h2>
-      <div><input type="file" accept="image/*" id="qrFile" style="margin-bottom:0.5rem;"></div>
-      <div class="form-group"><input type="text" id="certCode" placeholder="O ingresa el código"></div>
-      <button class="btn btn-primary" id="validarBtn">Verificar</button>
-      <div id="validarResult" style="margin-top:1rem;"></div>
-    </div>
-  </section>
-
-  <!-- CONTACTO -->
-  <section id="contacto" class="section">
-    <div class="container">
-      <h2 class="section-title">Contacto</h2>
-      <p>📧 info@cled.edu.do</p>
-      <p>📞 (809) 555-CLED</p>
-      <p>📷 <a href="https://instagram.com/cledrd" target="_blank">@cledrd</a></p>
-    </div>
-  </section>
-
-  <!-- FAQ -->
-  <section id="faq" class="section" style="background:#F8FAFC;">
-    <div class="container">
-      <h2 class="section-title">Preguntas Frecuentes</h2>
-      <div id="faqContainer"></div>
+      <h2 class="section-title">Testimonios</h2>
+      <div class="grid-3" id="testimoniosContainer"></div>
     </div>
   </section>
 
@@ -283,69 +233,90 @@
     <div class="container" style="text-align:center;">
       <h2 style="color:white;">Buscador</h2>
       <input type="text" id="globalSearch" placeholder="Buscar..." style="width:100%;max-width:500px;padding:0.8rem;border-radius:999px;border:none;margin-top:1rem;">
-      <div id="searchResults" style="margin-top:1rem;"></div>
+      <div id="searchResults" class="search-results" style="display:none;"></div>
     </div>
   </section>
 
   <!-- FOOTER -->
   <footer class="footer">
     <div class="container footer-grid">
-      <div><img src="LOGO_CLED_SF.png" height="36" alt="CLED"><p>Formando líderes desde 2020.</p></div>
-      <div><h4>Enlaces</h4><a href="#inicio" style="color:white;">Inicio</a></div>
-      <div><p>© 2026 CLED. Todos los derechos reservados.</p></div>
+      <div>
+        <img src="LOGO_CLED.png" height="36" alt="CLED">
+        <p style="margin-top:0.5rem;">Formando líderes desde 2020.</p>
+      </div>
+      <div>
+        <h4>Enlaces</h4>
+        <ul style="list-style:none; margin-top:0.5rem;">
+          <li><a href="nosotros.html" style="color:white;">Nosotros</a></li>
+          <li><a href="clubes.html" style="color:white;">Clubes</a></li>
+          <li><a href="eventos.html" style="color:white;">Eventos</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Contacto</h4>
+        <p style="margin-top:0.5rem;">📧 info@cled.edu.do</p>
+        <p>📞 (809) 555-CLED</p>
+        <p>📷 @cledrd</p>
+      </div>
+      <div>
+        <p>© 2026 CLED. Todos los derechos reservados.</p>
+      </div>
     </div>
   </footer>
 
-  <!-- MODAL CLUB -->
-  <div class="modal-overlay" id="clubModal"><div class="modal-content" id="clubModalContent"></div></div>
+  <!-- MODAL VER CLUB -->
+  <div class="modal-overlay" id="clubModal">
+    <div class="modal-content" id="clubModalContent"></div>
+  </div>
+
   <!-- MODAL REGISTRO EVENTO -->
-  <div class="modal-overlay" id="registroModal"><div class="modal-content" id="registroModalContent"></div></div>
-  <!-- MODAL STAFF -->
-  <div class="modal-overlay" id="staffModal"><div class="modal-content" id="staffModalContent"></div></div>
+  <div class="modal-overlay" id="registroModal">
+    <div class="modal-content" id="registroModalContent"></div>
+  </div>
 
   <script>
-    // CONFIGURACIÓN SUPABASE (cambiar con tus datos reales)
-    const SUPABASE_URL = 'https://xxxxxxx.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...';
-    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    // ---------- CONFIGURACIÓN SUPABASE ----------
+    const SUPABASE_URL = 'https://xxxxxxx.supabase.co'; // ← CAMBIAR
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'; // ← CAMBIAR
 
-    // Menú hamburguesa
+    let supabase;
+    try {
+      supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      console.log('✅ Supabase conectado');
+    } catch (e) {
+      console.warn('⚠️ Supabase no disponible – el menú funcionará, pero los datos dinámicos no se cargarán.');
+      supabase = null;
+    }
+
+    // ---------- MENÚ HAMBURGUESA ----------
     const menuBtn = document.getElementById('menuBtn');
     const menuOverlay = document.getElementById('menuOverlay');
     const menuClose = document.getElementById('menuClose');
+
     menuBtn.addEventListener('click', () => menuOverlay.classList.add('open'));
     menuClose.addEventListener('click', () => menuOverlay.classList.remove('open'));
-    // Cerrar menú al hacer clic en un enlace
+
     menuOverlay.querySelectorAll('a').forEach(link => {
-      link.addEventListener('click', () => {
-        menuOverlay.classList.remove('open');
-        const target = document.querySelector(link.getAttribute('href'));
-        if (target) target.scrollIntoView({ behavior: 'smooth' });
-      });
+      link.addEventListener('click', () => menuOverlay.classList.remove('open'));
     });
 
-    // Botones Campus
-    document.getElementById('campusBtn').addEventListener('click', () => alert('Redirigiendo al Campus CLED (en otro archivo)'));
-    document.getElementById('heroCampusBtn').addEventListener('click', () => alert('Redirigiendo al Campus CLED'));
-
-    // Cargar todas las secciones al iniciar
-    document.addEventListener('DOMContentLoaded', async () => {
+    // ---------- CARGAR DATOS AL INICIAR ----------
+    document.addEventListener('DOMContentLoaded', () => {
       cargarStats();
-      cargarNosotros();
       cargarClubes();
       cargarEventos();
       cargarNoticias();
-      cargarAlbumes();
-      cargarImpacto();
-      cargarDocumentos();
-      cargarFAQ();
+      cargarTestimonios();
+      configurarBuscador();
     });
 
+    // ---------- ESTADÍSTICAS ----------
     async function cargarStats() {
-      const { data } = await supabase.from('impact_stats').select('*').maybeSingle();
+      if (!supabase) return;
       const container = document.getElementById('statsContainer');
+      const { data } = await supabase.from('impact_stats').select('*').maybeSingle();
       if (data) {
-        container.innerHTML = [
+        const stats = [
           { n: data.miembros_activos, l: 'Miembros activos' },
           { n: data.clubes, l: 'Clubes' },
           { n: data.facilitadores, l: 'Facilitadores' },
@@ -353,68 +324,234 @@
           { n: data.eventos, l: 'Eventos' },
           { n: data.horas_voluntariado, l: 'Horas voluntariado' },
           { n: data.certificados, l: 'Certificados' }
-        ].map(s => `<div class="card" style="text-align:center;"><h3>${s.n}+</h3><p>${s.l}</p></div>`).join('');
+        ];
+        container.innerHTML = stats.map(s => `<div class="card" style="text-align:center;"><h3>${s.n}+</h3><p>${s.l}</p></div>`).join('');
+      } else {
+        container.innerHTML = '<p>Estadísticas no disponibles.</p>';
       }
     }
 
-    async function cargarNosotros() {
-      // Esto podría venir de una tabla "contenido" o similar, por ahora es estático
-      const div = document.getElementById('nosotrosContent');
-      if (div) div.innerHTML = `
-        <h3>Historia</h3><p>El CLED nace en 2020 con la misión de formar líderes estudiantiles íntegros...</p>
-        <h3>Misión</h3><p>Desarrollar competencias de liderazgo, comunicación y servicio en jóvenes dominicanos.</p>
-        <h3>Visión</h3><p>Ser referente nacional en formación de liderazgo estudiantil para el 2030.</p>
-        <h3>Valores</h3><p>Compromiso, integridad, creatividad, solidaridad, excelencia.</p>
-      `;
-    }
-
+    // ---------- CLUBES ----------
     async function cargarClubes() {
-      const { data } = await supabase.from('clubs').select('*');
+      if (!supabase) return;
       const container = document.getElementById('clubesContainer');
-      if (!data?.length) { container.innerHTML = '<p>No hay clubes por el momento.</p>'; return; }
+      const { data } = await supabase.from('clubs').select('*');
+      if (!data || data.length === 0) {
+        container.innerHTML = '<p>No hay clubes por el momento.</p>';
+        return;
+      }
       container.innerHTML = data.map(c => `
         <div class="card">
           <img src="${c.portada_url || 'https://placehold.co/400x200?text=Club'}" alt="${c.nombre}" style="width:100%;border-radius:12px;margin-bottom:1rem;">
           <h3>${c.nombre}</h3>
           <p>${c.descripcion || ''}</p>
           <button class="btn btn-outline" onclick="verClub('${c.id}')">Ver club</button>
-        </div>`).join('');
+        </div>
+      `).join('');
     }
 
     window.verClub = async (id) => {
+      if (!supabase) return;
       const { data } = await supabase.from('clubs').select('*, staff(*)').eq('id', id).maybeSingle();
+      if (!data) return;
       const modal = document.getElementById('clubModal');
       const content = document.getElementById('clubModalContent');
-      if (!data) return;
       content.innerHTML = `
         <button class="modal-close" onclick="document.getElementById('clubModal').classList.remove('open')">&times;</button>
         <img src="${data.portada_url || 'https://placehold.co/400x200?text=Club'}" style="width:100%;border-radius:12px;">
-        <h2>${data.nombre}</h2><p>${data.descripcion}</p>
+        <h2>${data.nombre}</h2>
+        <p>${data.descripcion || ''}</p>
         ${data.staff ? `<p><strong>Facilitador:</strong> ${data.staff.nombre} <img src="${data.staff.photo_url}" width="40" style="border-radius:50%;"></p>` : ''}
         <button class="btn btn-gold" onclick="alert('Inscripción (próximamente)')">Inscribirme</button>
       `;
       modal.classList.add('open');
     };
 
-    // El resto de las funciones (cargarEventos, cargarNoticias, etc.) se implementan de manera similar,
-    // siempre mostrando "No hay ... por el momento" si no hay datos.
-    // Por brevedad, incluimos solo la estructura; en producción las llenarías con consultas a Supabase.
-
+    // ---------- EVENTOS ----------
     async function cargarEventos() {
-      const { data } = await supabase.from('events').select('*').order('fecha', { ascending: true });
+      if (!supabase) return;
       const container = document.getElementById('eventosContainer');
-      if (!data?.length) { container.innerHTML = '<p>No hay eventos por el momento.</p>'; return; }
+      const { data } = await supabase.from('events').select('*').order('fecha', { ascending: true });
+      if (!data || data.length === 0) {
+        container.innerHTML = '<p>No hay eventos por el momento.</p>';
+        return;
+      }
       container.innerHTML = data.map(e => `
         <div class="card">
           <img src="${e.banner_url || 'https://placehold.co/400x150?text=Evento'}" style="width:100%;border-radius:12px;">
-          <h3>${e.titulo}</h3><p>📅 ${e.fecha} | 📍 ${e.lugar}</p>
-          <p>${e.estado === 'abierto' ? '✅ Abierto' : '🔒 Cerrado'}</p>
+          <h3>${e.titulo}</h3>
+          <p>📅 ${e.fecha} | 📍 ${e.lugar}</p>
+          <p>${e.estado === 'abierto' ? '✅ Registro abierto' : '🔒 Cerrado'}</p>
           <button class="btn btn-gold" ${e.estado !== 'abierto' ? 'disabled' : ''} onclick="abrirRegistro('${e.id}')">Registrarme</button>
-        </div>`).join('');
+        </div>
+      `).join('');
     }
 
-    // Las funciones de registro, descarga de PDF, etc., se mantienen como antes.
-    // (El código completo se puede extender fácilmente según sea necesario)
+    window.abrirRegistro = (eventoId) => {
+      const modal = document.getElementById('registroModal');
+      const content = document.getElementById('registroModalContent');
+      content.innerHTML = `
+        <button class="modal-close" onclick="document.getElementById('registroModal').classList.remove('open')">&times;</button>
+        <h2>Registro al Evento</h2>
+        <form id="formRegistro" data-evento="${eventoId}">
+          <div class="form-group">
+            <label>Rol</label>
+            <select id="rol"><option value="">Seleccione</option><option value="Estudiante">Estudiante</option><option value="Docente">Docente</option><option value="Gestion">Equipo de Gestión</option></select>
+          </div>
+          <div id="camposDinamicos"></div>
+          <button type="submit" class="btn btn-primary" style="width:100%;">Registrarme</button>
+        </form>
+        <div id="paseDigital" style="margin-top:1rem; text-align:center;"></div>
+      `;
+      document.getElementById('rol').addEventListener('change', actualizarCampos);
+      document.getElementById('formRegistro').addEventListener('submit', registrarEvento);
+      modal.classList.add('open');
+    };
+
+    function actualizarCampos() {
+      const rol = document.getElementById('rol').value;
+      let html = '';
+      if (rol === 'Estudiante') {
+        html = `
+          <div class="form-group"><input placeholder="Nombre(s)" id="nombre" required></div>
+          <div class="form-group"><input placeholder="Apellido(s)" id="apellido" required></div>
+          <div class="form-group"><label>Grado</label><select id="grado"><option value="">-</option><option>3ro</option><option>4to</option><option>5to</option><option>6to</option></select></div>
+          <div class="form-group"><label>Sección</label><select id="seccion"><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option></select></div>
+          <div class="form-group" id="moduloGroup" style="display:none;"><label>Módulo</label><select id="modulo"><option>Informática</option><option>Gestión</option><option>Logística</option><option>Refrigeración</option><option>Electrónica</option><option>Electricidad</option></select></div>
+          <div class="form-group"><input type="email" placeholder="Correo electrónico" id="email" required></div>`;
+      } else if (rol === 'Docente') {
+        html = `
+          <div class="form-group"><input placeholder="Nombre(s)" id="nombre" required></div>
+          <div class="form-group"><input placeholder="Apellido(s)" id="apellido" required></div>
+          <div class="form-group"><label>Modalidad</label><select id="modalidad"><option value="">-</option><option>Académica</option><option>Técnica</option></select></div>
+          <div class="form-group" id="areaGroup" style="display:none;"><label>Área</label><select id="area"><option>Lengua Española</option><option>Matemáticas</option><option>Sociales</option><option>Naturales</option><option>Educación Física</option><option>Educación Artística</option><option>Formación Integral Humana</option><option>Inglés</option><option>Francés</option><option>Moral y Cívica</option></select></div>
+          <div class="form-group" id="tecnicoGroup" style="display:none;"><label>Técnico</label><select id="tecnico"><option>Informática</option><option>Gestión</option><option>Logística</option><option>Refrigeración</option><option>Electrónica</option><option>Electricidad</option></select></div>
+          <div class="form-group"><input type="email" placeholder="Correo electrónico" id="email" required></div>`;
+      } else if (rol === 'Gestion') {
+        html = `
+          <div class="form-group"><input placeholder="Nombre(s)" id="nombre" required></div>
+          <div class="form-group"><input placeholder="Apellido(s)" id="apellido" required></div>
+          <div class="form-group"><label>Rol</label><select id="rolGestion"><option>Director</option><option>Sub-Director</option><option>Orientadora</option><option>Coordinador/a</option><option>Secretaria</option><option>Dinamizador TIC</option></select></div>
+          <div class="form-group"><input type="email" placeholder="Correo electrónico" id="email" required></div>`;
+      }
+      document.getElementById('camposDinamicos').innerHTML = html;
+
+      if (rol === 'Estudiante') {
+        const grado = document.getElementById('grado');
+        const moduloGroup = document.getElementById('moduloGroup');
+        const seccion = document.getElementById('seccion');
+        grado.addEventListener('change', () => {
+          moduloGroup.style.display = (grado.value && grado.value !== '3ro') ? 'block' : 'none';
+          seccion.innerHTML = (grado.value === '3ro') ? ['A','B','C','D','E'].map(v=>`<option>${v}</option>`).join('') : ['A','B'].map(v=>`<option>${v}</option>`).join('');
+        });
+      } else if (rol === 'Docente') {
+        document.getElementById('modalidad').addEventListener('change', function() {
+          document.getElementById('areaGroup').style.display = this.value === 'Académica' ? 'block' : 'none';
+          document.getElementById('tecnicoGroup').style.display = this.value === 'Técnica' ? 'block' : 'none';
+        });
+      }
+    }
+
+    async function registrarEvento(e) {
+      e.preventDefault();
+      const eventoId = e.target.dataset.evento;
+      const rol = document.getElementById('rol').value;
+      const nombre = document.getElementById('nombre').value;
+      const apellido = document.getElementById('apellido').value;
+      const email = document.getElementById('email').value;
+      const codigo = 'CLED-' + Math.random().toString(36).substr(2,8).toUpperCase();
+
+      // Si hubiera conexión Supabase, aquí guardaríamos los datos
+
+      document.getElementById('paseDigital').innerHTML = `
+        <h3>✅ Registro exitoso</h3>
+        <p><strong>Código:</strong> ${codigo}</p>
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${codigo}" alt="QR">
+        <p style="color:red;">📸 Captura este código. Sin él no podrás acceder al evento.</p>
+        <button class="btn btn-primary" onclick="descargarPDF('${nombre} ${apellido}', '${eventoId}', '${codigo}')">Descargar PDF</button>
+      `;
+    }
+
+    window.descargarPDF = (nombre, eventoId, codigo) => {
+      const qrImg = document.querySelector('#paseDigital img').src;
+      const ventana = window.open('', '_blank');
+      ventana.document.write(`
+        <html><head><title>Pase de Evento</title></head><body style="text-align:center;font-family:sans-serif;">
+          <img src="LOGO_CLED.png" width="80"><h1>CLED</h1>
+          <h2>Pase de Evento</h2><p>${nombre}</p><p>Evento ID: ${eventoId}</p>
+          <img src="${qrImg}"><p>Código: ${codigo}</p>
+        </body></html>
+      `);
+      ventana.document.close();
+      ventana.print();
+    };
+
+    // ---------- NOTICIAS ----------
+    async function cargarNoticias() {
+      if (!supabase) return;
+      const container = document.getElementById('noticiasContainer');
+      const { data } = await supabase.from('noticias').select('*').order('fecha', { ascending: false }).limit(3);
+      if (!data || data.length === 0) {
+        container.innerHTML = '<p>No hay noticias por el momento.</p>';
+        return;
+      }
+      container.innerHTML = data.map(n => `
+        <div class="card">
+          <img src="${n.imagen_url || 'https://placehold.co/400x150?text=Noticia'}" style="width:100%;border-radius:12px;">
+          <h3>${n.titulo}</h3>
+          <p>📰 ${n.club_id ? 'Club' : 'General'} | ${n.fecha}</p>
+          <p>${n.contenido?.substring(0,100) || ''}...</p>
+          <a href="#" style="color:#0A3D91;font-weight:600;">Leer más</a>
+        </div>
+      `).join('');
+    }
+
+    // ---------- TESTIMONIOS ----------
+    async function cargarTestimonios() {
+      if (!supabase) return;
+      const container = document.getElementById('testimoniosContainer');
+      const { data } = await supabase.from('testimonials').select('*').limit(3);
+      if (!data || data.length === 0) {
+        container.innerHTML = '<p>No hay testimonios aún.</p>';
+        return;
+      }
+      container.innerHTML = data.map(t => `
+        <div class="card" style="text-align:center;">
+          <img src="${t.foto_url || 'https://placehold.co/80'}" width="60" style="border-radius:50%;margin-bottom:1rem;">
+          <p>"${t.texto}"</p>
+          <strong>${t.autor}</strong>
+          <p style="color:#64748B;">${t.rol_autor}</p>
+        </div>
+      `).join('');
+    }
+
+    // ---------- BUSCADOR GLOBAL ----------
+    function configurarBuscador() {
+      const input = document.getElementById('globalSearch');
+      const resultsDiv = document.getElementById('searchResults');
+      input.addEventListener('input', async function() {
+        const q = this.value.trim().toLowerCase();
+        if (!q) { resultsDiv.style.display = 'none'; return; }
+        let resultados = [];
+        if (supabase) {
+          const [clubes, eventos, noticias] = await Promise.all([
+            supabase.from('clubs').select('nombre').ilike('nombre', `%${q}%`),
+            supabase.from('events').select('titulo').ilike('titulo', `%${q}%`),
+            supabase.from('noticias').select('titulo').ilike('titulo', `%${q}%`)
+          ]);
+          if (clubes.data) resultados = [...resultados, ...clubes.data.map(c => `🏫 ${c.nombre}`)];
+          if (eventos.data) resultados = [...resultados, ...eventos.data.map(e => `📅 ${e.titulo}`)];
+          if (noticias.data) resultados = [...resultados, ...noticias.data.map(n => `📰 ${n.titulo}`)];
+        }
+        if (resultados.length > 0) {
+          resultsDiv.innerHTML = resultados.map(r => `<div>${r}</div>`).join('');
+          resultsDiv.style.display = 'block';
+        } else {
+          resultsDiv.innerHTML = '<div>Sin resultados</div>';
+          resultsDiv.style.display = 'block';
+        }
+      });
+    }
 
     // Cerrar modales al hacer clic fuera
     document.querySelectorAll('.modal-overlay').forEach(modal => {
