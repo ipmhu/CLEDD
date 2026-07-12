@@ -3,79 +3,62 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="CLED - Club de Liderazgo Estudiantil y Desarrollo. Formando líderes en República Dominicana.">
+  <meta name="theme-color" content="#0A3D91">
+  <link rel="manifest" href="data:application/json,{}">
   <title>CLED – Club de Liderazgo Estudiantil y Desarrollo</title>
   <!-- Fuentes -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <!-- Supabase -->
+  <!-- Supabase CDN -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     /* ========== RESET & VARIABLES ========== */
     *,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --clr-primary: #0A3D91;
-      --clr-primary-light: #3b6cb4;
-      --clr-gold: #D4AF37;
-      --clr-gold-dark: #b8960f;
-      --clr-white: #FFFFFF;
-      --clr-gray-light: #F5F5F5;
-      --clr-gray-dark: #374151;
-      --bg-light: #ffffff;
-      --bg-dark: #0f172a;
-      --text-light: #0f172a;
-      --text-dark: #f1f5f9;
-      --card-light: #f8fafc;
-      --card-dark: #1e293b;
-      --border-light: #e2e8f0;
-      --border-dark: #334155;
-      --radius: 16px;
-      --shadow: 0 10px 25px -5px rgba(0,0,0,0.05), 0 8px 10px -6px rgba(0,0,0,0.02);
-      --shadow-lg: 0 20px 25px -5px rgba(0,0,0,0.08), 0 10px 10px -5px rgba(0,0,0,0.03);
+      --primary: #0A3D91; --primary-dark: #062757; --primary-light: #3b6cb4;
+      --gold: #D4AF37; --gold-dark: #b8960f; --gold-light: #f0d878;
+      --white: #FFFFFF; --gray-50: #F8FAFC; --gray-100: #F1F5F9;
+      --gray-200: #E2E8F0; --gray-300: #CBD5E1; --gray-500: #64748B;
+      --gray-700: #334155; --gray-900: #0F172A;
+      --bg: #FFFFFF; --text: #0F172A; --card: #FFFFFF; --border: #E2E8F0;
+      --radius: 16px; --radius-sm: 8px;
+      --shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -2px rgba(0,0,0,0.05);
+      --shadow-lg: 0 10px 25px -5px rgba(0,0,0,0.08), 0 8px 10px -6px rgba(0,0,0,0.03);
       --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     }
     .dark {
-      --bg: var(--bg-dark);
-      --text: var(--text-dark);
-      --card: var(--card-dark);
-      --border: var(--border-dark);
+      --bg: #0F172A; --text: #F1F5F9; --card: #1E293B; --border: #334155;
     }
     body {
-      font-family: 'Inter', sans-serif;
-      background: var(--bg-light);
-      color: var(--text-light);
-      line-height: 1.6;
-      transition: background var(--transition), color var(--transition);
+      font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text);
+      line-height: 1.6; transition: background var(--transition), color var(--transition);
       overflow-x: hidden;
     }
-    body.dark {
-      background: var(--bg-dark);
-      color: var(--text-dark);
-    }
-    h1, h2, h3, h4 { font-family: 'Montserrat', sans-serif; font-weight: 700; line-height: 1.2; }
+    h1,h2,h3,h4 { font-family: 'Montserrat', sans-serif; font-weight: 700; }
     a { color: inherit; text-decoration: none; }
     img { max-width: 100%; display: block; }
 
-    /* ========== UTILIDADES ========== */
-    .container { width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; }
     .btn {
       display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
       padding: 0.75rem 1.8rem; border-radius: 9999px; font-weight: 600; font-size: 0.95rem;
-      cursor: pointer; border: none; transition: all var(--transition); text-align: center;
+      cursor: pointer; border: none; transition: all var(--transition);
     }
-    .btn-primary { background: var(--clr-primary); color: white; }
-    .btn-primary:hover { background: #083274; transform: translateY(-2px); box-shadow: var(--shadow-lg); }
-    .btn-gold { background: var(--clr-gold); color: var(--clr-gray-dark); }
-    .btn-gold:hover { background: var(--clr-gold-dark); transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-primary:hover { background: var(--primary-dark); transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+    .btn-gold { background: var(--gold); color: #1e293b; }
+    .btn-gold:hover { background: var(--gold-dark); transform: translateY(-2px); box-shadow: var(--shadow-lg); }
     .btn-outline {
       background: transparent; border: 2px solid var(--border); color: var(--text);
-      backdrop-filter: blur(4px);
     }
     .btn-outline:hover { background: var(--border); }
+
     .section { padding: 5rem 0; }
     .section-title {
-      font-size: 2.5rem; font-weight: 800; margin-bottom: 1rem;
-      background: linear-gradient(135deg, var(--clr-primary), #1e40af);
+      font-size: 2.25rem; font-weight: 800; margin-bottom: 0.75rem;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
       -webkit-background-clip: text; -webkit-text-fill-color: transparent;
     }
     .dark .section-title {
@@ -83,469 +66,524 @@
       -webkit-background-clip: text; -webkit-text-fill-color: transparent;
     }
 
-    /* ========== HEADER / NAV ========== */
+    /* Header */
     .main-header {
       position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-      padding: 1rem 0;
-      transition: background var(--transition), box-shadow var(--transition);
+      padding: 1rem 0; transition: background var(--transition), box-shadow var(--transition);
     }
     .main-header.scrolled {
       background: rgba(255,255,255,0.85); backdrop-filter: blur(12px);
       box-shadow: 0 2px 10px rgba(0,0,0,0.05);
     }
-    .dark .main-header.scrolled {
-      background: rgba(15,23,42,0.85);
-    }
+    .dark .main-header.scrolled { background: rgba(15,23,42,0.85); }
     .header-inner {
       display: flex; align-items: center; justify-content: space-between;
       max-width: 1200px; margin: 0 auto; padding: 0 1.5rem;
     }
     .logo {
       display: flex; align-items: center; gap: 0.75rem; font-weight: 800;
-      font-size: 1.5rem; font-family: 'Montserrat', sans-serif; color: var(--clr-primary);
+      font-size: 1.5rem; font-family: 'Montserrat', sans-serif; color: var(--primary);
     }
-    .dark .logo { color: #60a5fa; }
-    .nav-links { display: flex; gap: 1.5rem; align-items: center; }
+    .nav-links { display: flex; gap: 1.25rem; align-items: center; flex-wrap: wrap; }
     .nav-links a {
-      font-weight: 500; position: relative; padding: 0.25rem 0;
+      font-weight: 500; position: relative; padding: 0.25rem 0; white-space: nowrap;
       transition: color var(--transition);
     }
     .nav-links a::after {
       content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 2px;
-      background: var(--clr-gold); transition: width var(--transition);
+      background: var(--gold); transition: width var(--transition);
     }
     .nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
-    .theme-toggle {
-      background: none; border: none; font-size: 1.5rem; cursor: pointer;
-      padding: 0.3rem; border-radius: 50%; transition: background var(--transition);
-    }
-    .theme-toggle:hover { background: var(--border); }
 
-    /* ========== HERO ========== */
+    /* Hero */
     .hero {
       min-height: 100vh; display: flex; align-items: center;
       background: linear-gradient(135deg, #0A3D91 0%, #02111D 100%);
       color: white; position: relative; overflow: hidden;
     }
-    .hero::before {
-      content: ''; position: absolute; top: -50%; right: -20%; width: 80%; height: 200%;
-      background: radial-gradient(circle, rgba(212,175,55,0.15) 0%, transparent 70%);
-      transform: rotate(15deg);
-    }
-    .hero-content { position: relative; z-index: 10; }
-    .hero h1 { font-size: clamp(2.5rem, 6vw, 4.5rem); margin-bottom: 1.5rem; }
-    .hero p { font-size: 1.25rem; opacity: 0.9; max-width: 600px; margin-bottom: 2.5rem; }
+    .hero-content { position: relative; z-index: 2; }
+    .hero h1 { font-size: clamp(2.5rem, 6vw, 4.5rem); margin-bottom: 1rem; }
+    .hero p { font-size: 1.2rem; opacity: 0.9; max-width: 650px; }
 
-    /* ========== CARDS ========== */
+    /* Cards */
     .card {
-      background: var(--card); border-radius: var(--radius); padding: 2rem;
-      box-shadow: var(--shadow); transition: all var(--transition);
-      border: 1px solid var(--border);
+      background: var(--card); border-radius: var(--radius); padding: 1.75rem;
+      box-shadow: var(--shadow); border: 1px solid var(--border);
+      transition: all var(--transition);
     }
-    .card:hover { transform: translateY(-8px); box-shadow: var(--shadow-lg); }
+    .card:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); }
 
-    /* ========== CLUBES GRID ========== */
-    .clubs-grid {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 1.5rem; margin-top: 2.5rem;
-    }
+    /* Grids */
+    .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
+    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; }
+    .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.25rem; }
 
-    /* ========== LOGIN MODAL ========== */
-    .modal {
+    /* Modal */
+    .modal-overlay {
       position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(6px);
       display: flex; align-items: center; justify-content: center; z-index: 1000;
       opacity: 0; pointer-events: none; transition: opacity 0.3s;
     }
-    .modal.open { opacity: 1; pointer-events: auto; }
+    .modal-overlay.open { opacity: 1; pointer-events: auto; }
     .modal-content {
-      background: var(--bg); border-radius: var(--radius); max-width: 450px; width: 90%;
-      padding: 2.5rem; position: relative; box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+      background: var(--bg); border-radius: var(--radius); max-width: 700px; width: 90%; max-height: 85vh;
+      overflow-y: auto; padding: 2rem; position: relative; box-shadow: 0 25px 50px rgba(0,0,0,0.25);
     }
     .modal-close {
-      position: absolute; top: 1rem; right: 1.5rem; background: none; border: none;
-      font-size: 1.5rem; cursor: pointer; color: var(--text);
+      position: absolute; top: 1rem; right: 1.25rem; background: none; border: none;
+      font-size: 1.75rem; cursor: pointer; color: var(--text); line-height: 1;
     }
-    .form-group { margin-bottom: 1.5rem; }
-    .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; }
-    .form-group input {
-      width: 100%; padding: 0.75rem 1rem; border: 2px solid var(--border);
-      border-radius: var(--radius); background: var(--card); color: var(--text);
-      font-size: 1rem; transition: border var(--transition);
-    }
-    .form-group input:focus { outline: none; border-color: var(--clr-primary); }
 
-    /* ========== DASHBOARD ========== */
-    .dashboard-container { display: flex; height: 100vh; }
-    .sidebar {
-      width: 260px; background: var(--card); border-right: 1px solid var(--border);
-      padding: 1.5rem; display: flex; flex-direction: column; transition: width 0.3s;
+    /* Forms */
+    .form-group { margin-bottom: 1.25rem; }
+    .form-group label { display: block; margin-bottom: 0.4rem; font-weight: 600; font-size: 0.9rem; }
+    .form-group input, .form-group select, .form-group textarea {
+      width: 100%; padding: 0.7rem 1rem; border: 2px solid var(--border);
+      border-radius: var(--radius-sm); background: var(--card); color: var(--text);
+      font-family: inherit; font-size: 0.95rem; transition: border var(--transition);
     }
-    .sidebar a {
-      display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem;
-      border-radius: var(--radius); color: var(--text); font-weight: 500;
-      transition: all var(--transition);
-    }
-    .sidebar a:hover, .sidebar a.active { background: var(--clr-primary); color: white; }
-    .main-content { flex: 1; overflow-y: auto; padding: 2rem; }
+    .form-group input:focus, .form-group select:focus { outline: none; border-color: var(--primary); }
 
-    /* ========== FOOTER ========== */
+    /* Footer */
     .footer {
-      background: var(--clr-gray-dark); color: white; padding: 3rem 0;
-      margin-top: 4rem;
+      background: var(--gray-900); color: white; padding: 4rem 0 2rem;
     }
-    .footer-grid {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 2rem;
-    }
+    .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; }
 
-    /* ========== RESPONSIVE ========== */
+    /* Utilidades */
+    .text-gold { color: var(--gold); }
+    .bg-gold { background: var(--gold); }
+    .bg-primary-light { background: var(--primary-light); }
+    .mt-2 { margin-top: 2rem; }
+    .mb-1 { margin-bottom: 1rem; }
+    .mb-2 { margin-bottom: 2rem; }
+
+    /* Responsive */
     @media (max-width: 768px) {
       .nav-links { display: none; }
-      .sidebar { width: 0; overflow: hidden; padding: 0; }
+      .hero h1 { font-size: 2.5rem; }
     }
+
+    /* Animaciones */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-in { animation: fadeInUp 0.6s ease forwards; }
   </style>
 </head>
 <body>
-  <!-- ==================== PORTAL PÚBLICO ==================== -->
-  <div id="publicApp">
-    <!-- Header -->
-    <header class="main-header" id="header">
-      <div class="header-inner">
-        <div class="logo">
-          <svg width="36" height="36" viewBox="0 0 100 100" fill="none">
-            <circle cx="50" cy="50" r="48" fill="#0A3D91"/>
-            <path d="M30 70 L50 30 L70 70" stroke="#D4AF37" stroke-width="6" fill="none"/>
-          </svg>
-          <span>CLED</span>
-        </div>
-        <nav class="nav-links" id="navLinks">
-          <a href="#inicio" class="active">Inicio</a>
-          <a href="#nosotros">Nosotros</a>
-          <a href="#clubes">Clubes</a>
-          <a href="#eventos">Eventos</a>
-          <a href="#contacto">Contacto</a>
-        </nav>
-        <div style="display:flex;gap:0.75rem;align-items:center;">
-          <button class="theme-toggle" id="themeToggle" aria-label="Cambiar tema">🌙</button>
-          <button class="btn btn-primary" id="openLoginBtn">Campus CLED</button>
+  <!-- ==================== HEADER ==================== -->
+  <header class="main-header" id="header">
+    <div class="header-inner">
+      <div class="logo">
+        <svg width="36" height="36" viewBox="0 0 100 100" fill="none"><circle cx="50" cy="50" r="48" fill="#0A3D91"/><path d="M30 70 L50 30 L70 70" stroke="#D4AF37" stroke-width="6" fill="none"/></svg>
+        <span>CLED</span>
+      </div>
+      <nav class="nav-links" id="navLinks">
+        <a href="#inicio">Inicio</a><a href="#nosotros">Nosotros</a><a href="#clubes">Clubes</a>
+        <a href="#eventos">Eventos</a><a href="#noticias">Noticias</a><a href="#proyectos">Proyectos</a>
+        <a href="#galeria">Galería</a><a href="#impacto">Impacto</a><a href="#documentos">Documentos</a>
+        <a href="#contacto">Contacto</a><a href="#faq">FAQ</a>
+      </nav>
+      <div style="display:flex;gap:0.5rem;align-items:center;">
+        <button class="theme-toggle" id="themeToggle" aria-label="Cambiar tema" style="background:none;border:none;font-size:1.5rem;cursor:pointer;">🌙</button>
+        <button class="btn btn-primary" id="campusBtn">Campus CLED</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==================== HERO ==================== -->
+  <section id="inicio" class="hero">
+    <div class="container hero-content animate-in">
+      <h1>Club de Liderazgo<br>Estudiantil y Desarrollo</h1>
+      <p>Impulsamos el talento joven dominicano a través de la comunicación, el arte, el debate y el servicio social.</p>
+      <div style="margin-top:2rem;display:flex;gap:1rem;flex-wrap:wrap;">
+        <button class="btn btn-gold" onclick="document.getElementById('nosotros').scrollIntoView({behavior:'smooth'})">Conoce el CLED</button>
+        <button class="btn btn-outline" style="color:white;border-color:rgba(255,255,255,0.4);" id="heroCampusBtn">Iniciar Sesión</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== ESTADÍSTICAS ==================== -->
+  <section class="section" style="padding-top:2rem;padding-bottom:2rem;">
+    <div class="container">
+      <div class="grid-4" id="statsContainer">
+        <!-- JS llena esto -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== CLUBES DESTACADOS ==================== -->
+  <section id="clubes" class="section" style="background:var(--card);">
+    <div class="container">
+      <h2 class="section-title">Clubes Destacados</h2>
+      <div class="grid-3" id="clubesContainer"></div>
+    </div>
+  </section>
+
+  <!-- ==================== PRÓXIMOS EVENTOS ==================== -->
+  <section id="eventos" class="section">
+    <div class="container">
+      <h2 class="section-title">Próximos Eventos</h2>
+      <div class="grid-3" id="eventosContainer"></div>
+    </div>
+  </section>
+
+  <!-- ==================== NOTICIAS RECIENTES ==================== -->
+  <section id="noticias" class="section" style="background:var(--card);">
+    <div class="container">
+      <h2 class="section-title">Noticias Recientes</h2>
+      <div class="grid-3" id="noticiasContainer"></div>
+    </div>
+  </section>
+
+  <!-- ==================== PROYECTOS DESTACADOS ==================== -->
+  <section id="proyectos" class="section">
+    <div class="container">
+      <h2 class="section-title">Proyectos Destacados</h2>
+      <div class="grid-3" id="proyectosContainer"></div>
+    </div>
+  </section>
+
+  <!-- ==================== TESTIMONIOS ==================== -->
+  <section class="section" style="background:var(--primary);color:white;">
+    <div class="container">
+      <h2 style="color:white;">Testimonios</h2>
+      <div class="grid-3" id="testimoniosContainer"></div>
+    </div>
+  </section>
+
+  <!-- ==================== NOSOTROS ==================== -->
+  <section id="nosotros" class="section">
+    <div class="container">
+      <h2 class="section-title">Nosotros</h2>
+      <div style="max-width:800px;">
+        <h3>Historia</h3><p>El CLED nace en 2020 con la misión de formar líderes estudiantiles íntegros...</p>
+        <h3 class="mt-2">Misión</h3><p>Desarrollar competencias de liderazgo, comunicación y servicio en jóvenes dominicanos.</p>
+        <h3>Visión</h3><p>Ser referente nacional en formación de liderazgo estudiantil para el 2030.</p>
+        <h3>Valores</h3><p>Compromiso, integridad, creatividad, solidaridad, excelencia.</p>
+        <h3>Organigrama</h3><p>(Estructura: Dirección General, Directores de Club, Facilitadores, Miembros)</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== IMPACTO ==================== -->
+  <section id="impacto" class="section" style="background:var(--card);">
+    <div class="container">
+      <h2 class="section-title">Impacto</h2>
+      <div class="grid-4" id="impactoContainer"></div>
+    </div>
+  </section>
+
+  <!-- ==================== RECONOCIMIENTOS ==================== -->
+  <section class="section">
+    <div class="container">
+      <h2 class="section-title">Reconocimientos</h2>
+      <div class="grid-3" id="reconocimientosContainer"></div>
+    </div>
+  </section>
+
+  <!-- ==================== DOCUMENTOS PÚBLICOS ==================== -->
+  <section id="documentos" class="section" style="background:var(--card);">
+    <div class="container">
+      <h2 class="section-title">Documentos Públicos</h2>
+      <ul style="list-style:none;" id="documentosList">
+        <li>📄 <a href="#">Estatuto del CLED</a></li>
+        <li>📄 <a href="#">Reglamento Interno</a></li>
+        <li>📄 <a href="#">Manual del Miembro</a></li>
+        <li>📄 <a href="#">Calendario Institucional 2026</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ==================== VALIDAR CERTIFICADO ==================== -->
+  <section id="validar" class="section">
+    <div class="container" style="max-width:500px;">
+      <h2 class="section-title">Validar Certificado</h2>
+      <div class="form-group"><input type="text" id="certCode" placeholder="Código del certificado"></div>
+      <button class="btn btn-primary" id="validarBtn">Verificar</button>
+      <div id="validarResult" style="margin-top:1rem;"></div>
+    </div>
+  </section>
+
+  <!-- ==================== CONTACTO ==================== -->
+  <section id="contacto" class="section" style="background:var(--card);">
+    <div class="container">
+      <h2 class="section-title">Contacto</h2>
+      <div class="grid-2">
+        <form id="contactForm">
+          <div class="form-group"><input type="text" placeholder="Nombre" required></div>
+          <div class="form-group"><input type="email" placeholder="Correo electrónico" required></div>
+          <div class="form-group"><textarea rows="4" placeholder="Mensaje" required></textarea></div>
+          <button type="submit" class="btn btn-primary">Enviar</button>
+        </form>
+        <div>
+          <p>📍 Santo Domingo, República Dominicana</p>
+          <p>📧 info@cled.edu.do</p>
+          <p>🕒 Lunes a Viernes, 8:00 AM - 4:00 PM</p>
+          <div style="margin-top:1rem;">🔗 Redes sociales: FB | IG | TW</div>
         </div>
       </div>
-    </header>
+    </div>
+  </section>
 
-    <!-- Hero -->
-    <section id="inicio" class="hero">
-      <div class="container hero-content">
-        <h1>Club de Liderazgo<br>Estudiantil y Desarrollo</h1>
-        <p>Impulsamos el talento joven dominicano a través de la comunicación, el arte, el debate y el servicio social. Sé parte de la nueva generación de líderes.</p>
-        <div style="display:flex;gap:1rem;flex-wrap:wrap;">
-          <button class="btn btn-gold" id="heroCampusBtn">Ingresar al Campus</button>
-          <button class="btn btn-outline" style="color:white;border-color:rgba(255,255,255,0.4);" onclick="document.getElementById('nosotros').scrollIntoView({behavior:'smooth'})">Conocer más</button>
-        </div>
+  <!-- ==================== FAQ ==================== -->
+  <section id="faq" class="section">
+    <div class="container">
+      <h2 class="section-title">Preguntas Frecuentes</h2>
+      <div id="faqContainer"></div>
+    </div>
+  </section>
+
+  <!-- ==================== BUSCADOR GLOBAL ==================== -->
+  <section class="section" style="background:var(--primary);color:white;">
+    <div class="container" style="text-align:center;">
+      <h2 style="color:white;">Buscador Global</h2>
+      <div style="max-width:500px;margin:1rem auto;">
+        <input type="text" id="globalSearch" placeholder="Buscar en noticias, eventos, clubes..." style="width:100%;padding:0.8rem;border-radius:999px;border:none;">
       </div>
-    </section>
+      <div id="searchResults" style="margin-top:1rem;"></div>
+    </div>
+  </section>
 
-    <!-- Nosotros -->
-    <section id="nosotros" class="section">
-      <div class="container">
-        <h2 class="section-title">Nuestra Esencia</h2>
-        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:2rem;margin-top:2rem;">
-          <div class="card">
-            <h3>Comunicación</h3>
-            <p>Desarrollamos habilidades de expresión oral y escrita que trascienden el aula y preparan para el mundo profesional.</p>
-          </div>
-          <div class="card">
-            <h3>Liderazgo</h3>
-            <p>Formamos jóvenes capaces de inspirar, guiar y transformar su entorno con integridad y visión.</p>
-          </div>
-          <div class="card">
-            <h3>Desarrollo</h3>
-            <p>Impulsamos el crecimiento personal y profesional de cada miembro a través de experiencias significativas.</p>
-          </div>
-        </div>
-      </div>
-    </section>
+  <!-- ==================== FOOTER ==================== -->
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div><div class="logo" style="color:white;">CLED</div><p>Formando líderes desde 2020.</p></div>
+      <div><h4>Enlaces</h4><ul style="list-style:none;"><li><a href="#inicio">Inicio</a></li><li><a href="#nosotros">Nosotros</a></li><li><a href="#clubes">Clubes</a></li><li><a href="#eventos">Eventos</a></li></ul></div>
+      <div><h4>Contacto</h4><p>info@cled.edu.do<br>Santo Domingo, R.D.</p></div>
+      <div><p>&copy; 2026 CLED. Todos los derechos reservados.</p></div>
+    </div>
+  </footer>
 
-    <!-- Clubes -->
-    <section id="clubes" class="section" style="background: var(--card);">
-      <div class="container">
-        <h2 class="section-title">Nuestros Clubes</h2>
-        <div class="clubs-grid" id="clubsContainer">
-          <!-- Se llena con JS -->
-        </div>
-      </div>
-    </section>
-
-    <!-- Eventos -->
-    <section id="eventos" class="section">
-      <div class="container">
-        <h2 class="section-title">Próximos Eventos</h2>
-        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem;margin-top:2rem;" id="eventsContainer">
-          <!-- Eventos dinámicos -->
-        </div>
-      </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="footer">
-      <div class="container">
-        <div class="footer-grid">
-          <div>
-            <div class="logo" style="color:white;margin-bottom:1rem;">CLED</div>
-            <p style="opacity:0.8;">Formando líderes en República Dominicana desde 2020.</p>
-          </div>
-          <div>
-            <h4 style="margin-bottom:1rem;">Enlaces</h4>
-            <ul style="list-style:none;opacity:0.8;">
-              <li><a href="#inicio">Inicio</a></li>
-              <li><a href="#nosotros">Nosotros</a></li>
-              <li><a href="#clubes">Clubes</a></li>
-              <li><a href="#eventos">Eventos</a></li>
-            </ul>
-          </div>
-          <div>
-            <h4 style="margin-bottom:1rem;">Contacto</h4>
-            <p style="opacity:0.8;">info@cled.edu.do<br>Santo Domingo, R.D.</p>
-          </div>
-        </div>
-      </div>
-    </footer>
-  </div>
-
-  <!-- ==================== LOGIN MODAL ==================== -->
-  <div class="modal" id="loginModal">
+  <!-- ==================== MODAL REGISTRO EVENTO ==================== -->
+  <div class="modal-overlay" id="registroModal">
     <div class="modal-content">
-      <button class="modal-close" id="closeModalBtn">&times;</button>
-      <h2 style="margin-bottom:1.5rem;">Iniciar Sesión</h2>
-      <form id="loginForm">
-        <div class="form-group">
-          <label>Correo electrónico</label>
-          <input type="email" id="loginEmail" required placeholder="tu@correo.com">
-        </div>
-        <div class="form-group">
-          <label>Contraseña</label>
-          <input type="password" id="loginPassword" required placeholder="••••••••">
-        </div>
-        <button type="submit" class="btn btn-primary" style="width:100%;">Ingresar</button>
+      <button class="modal-close" id="closeRegistroModal">&times;</button>
+      <h2>Registro al Evento</h2>
+      <form id="registroForm">
+        <div class="form-group"><label>Nombre(s)</label><input type="text" id="regNombre" required></div>
+        <div class="form-group"><label>Apellido(s)</label><input type="text" id="regApellido" required></div>
+        <div class="form-group"><label>Rol</label><select id="regRol"><option value="Estudiante">Estudiante</option><option value="Docente">Docente</option><option value="Equipo de Gestión">Equipo de Gestión</option></select></div>
+        <div id="camposExtra"></div>
+        <button type="submit" class="btn btn-primary" style="width:100%;">Registrarme</button>
       </form>
-      <p style="margin-top:1rem;text-align:center;">
-        <a href="#" id="magicLinkBtn" style="color:var(--clr-primary);">Acceder con enlace mágico</a>
-      </p>
+      <div id="paseDigital" style="display:none; margin-top:1rem; text-align:center;"></div>
     </div>
   </div>
 
-  <!-- ==================== DASHBOARD (OCULTO INICIALMENTE) ==================== -->
-  <div id="dashboardApp" style="display:none;">
-    <div class="dashboard-container">
-      <aside class="sidebar" id="sidebar">
-        <div class="logo" style="margin-bottom:2rem;">CLED</div>
-        <nav style="display:flex;flex-direction:column;gap:0.5rem;">
-          <a href="#" class="active" data-view="inicio">📊 Dashboard</a>
-          <a href="#" data-view="calendario">📅 Calendario</a>
-          <a href="#" data-view="recursos">📚 Recursos</a>
-          <a href="#" data-view="equipos">👥 Equipos</a>
-        </nav>
-        <button class="btn btn-outline" style="margin-top:auto;" onclick="signOut()">Cerrar sesión</button>
-      </aside>
-      <main class="main-content" id="dashboardContent">
-        <!-- Contenido dinámico -->
-      </main>
-    </div>
+  <!-- ==================== MODAL DETALLE CLUB ==================== -->
+  <div class="modal-overlay" id="clubModal">
+    <div class="modal-content" id="clubModalContent"></div>
   </div>
 
+  <!-- ==================== SCRIPTS ==================== -->
   <script>
     (function() {
-      // ---------- CONFIGURACIÓN SUPABASE ----------
+      // ----- SUPABASE (configurar cuando tengas proyecto) -----
       const SUPABASE_URL = 'https://xxxxxxx.supabase.co'; // ← CAMBIAR
       const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'; // ← CAMBIAR
-
       let supabase;
-      try {
-        supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-      } catch(e) {
-        console.warn('Supabase no configurado. Funcionalidad limitada.');
-      }
+      try { supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY); } catch(e) { console.warn('Supabase no configurado.'); }
 
-      // ---------- ELEMENTOS DOM ----------
-      const publicApp = document.getElementById('publicApp');
-      const dashboardApp = document.getElementById('dashboardApp');
-      const loginModal = document.getElementById('loginModal');
-      const openLoginBtn = document.getElementById('openLoginBtn');
-      const heroCampusBtn = document.getElementById('heroCampusBtn');
-      const closeModalBtn = document.getElementById('closeModalBtn');
-      const loginForm = document.getElementById('loginForm');
-      const magicLinkBtn = document.getElementById('magicLinkBtn');
+      // ----- TEMA -----
       const themeToggle = document.getElementById('themeToggle');
-      const header = document.getElementById('header');
-      const navLinks = document.querySelectorAll('.nav-links a');
-
-      // ---------- TEMA OSCURO ----------
       const setTheme = (dark) => {
         document.body.classList.toggle('dark', dark);
         themeToggle.textContent = dark ? '☀️' : '🌙';
         localStorage.setItem('theme', dark ? 'dark' : 'light');
       };
-      const currentTheme = localStorage.getItem('theme') || 'light';
-      setTheme(currentTheme === 'dark');
+      setTheme((localStorage.getItem('theme')||'light') === 'dark');
       themeToggle.addEventListener('click', () => setTheme(!document.body.classList.contains('dark')));
 
-      // ---------- NAV SCROLL ----------
+      // ----- HEADER SCROLL -----
       window.addEventListener('scroll', () => {
-        header.classList.toggle('scrolled', window.scrollY > 50);
-        // Actualizar active en nav según sección visible
-        const sections = ['inicio','nosotros','clubes','eventos'];
-        let current = '';
-        sections.forEach(id => {
-          const sec = document.getElementById(id);
-          if (sec && sec.getBoundingClientRect().top <= 100) current = id;
-        });
-        navLinks.forEach(link => {
-          link.classList.remove('active');
-          if (link.getAttribute('href') === '#'+current) link.classList.add('active');
-        });
+        document.getElementById('header').classList.toggle('scrolled', window.scrollY > 50);
       });
 
-      // ---------- MODAL LOGIN ----------
-      const openModal = () => loginModal.classList.add('open');
-      const closeModal = () => loginModal.classList.remove('open');
-      openLoginBtn.addEventListener('click', openModal);
-      heroCampusBtn.addEventListener('click', openModal);
-      closeModalBtn.addEventListener('click', closeModal);
-      loginModal.addEventListener('click', (e) => { if (e.target === loginModal) closeModal(); });
-
-      // Login con email/password
-      loginForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        if (!supabase) return alert('Conexión con Supabase no configurada.');
-        const email = document.getElementById('loginEmail').value;
-        const password = document.getElementById('loginPassword').value;
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
-        if (error) return alert(error.message);
-        closeModal();
-        checkUserAndShowDashboard();
-      });
-
-      // Magic link
-      magicLinkBtn.addEventListener('click', async (e) => {
-        e.preventDefault();
-        const email = prompt('Ingresa tu correo para recibir el enlace mágico:');
-        if (email && supabase) {
-          const { error } = await supabase.auth.signInWithOtp({ email });
-          if (error) alert(error.message);
-          else alert('Revisa tu correo.');
-        }
-      });
-
-      // ---------- CERRAR SESIÓN ----------
-      window.signOut = async function() {
-        if (supabase) await supabase.auth.signOut();
-        publicApp.style.display = 'block';
-        dashboardApp.style.display = 'none';
-        window.location.hash = '#inicio';
-      };
-
-      // ---------- DASHBOARD ----------
-      async function checkUserAndShowDashboard() {
-        if (!supabase) return;
-        const { data: { user } } = await supabase.auth.getUser();
-        if (user) {
-          publicApp.style.display = 'none';
-          dashboardApp.style.display = 'block';
-          loadDashboardData(user);
-        } else {
-          publicApp.style.display = 'block';
-          dashboardApp.style.display = 'none';
-        }
-      }
-
-      async function loadDashboardData(user) {
-        const content = document.getElementById('dashboardContent');
-        // Obtener perfil
-        let profile = null;
-        if (supabase) {
-          const { data } = await supabase.from('profiles').select('*').eq('id', user.id).single();
-          profile = data;
-        }
-        const userName = profile ? `${profile.first_name} ${profile.last_name}` : user.email;
-        content.innerHTML = `
-          <h1>Bienvenido, ${userName}</h1>
-          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.5rem;margin:2rem 0;">
-            <div class="card"><h3>Próximo Evento</h3><p>Feria de Clubes 2026</p></div>
-            <div class="card"><h3>Próxima Reunión</h3><p>Debate - Vie 3:00 PM</p></div>
-            <div class="card"><h3>Promedio</h3><p>92.5</p></div>
-            <div class="card"><h3>Equipo</h3><p>Equipo Alpha</p></div>
-          </div>
-        `;
-      }
-
-      // Navegación interna del dashboard (simulada)
-      document.querySelectorAll('.sidebar a[data-view]').forEach(link => {
-        link.addEventListener('click', (e) => {
-          e.preventDefault();
-          document.querySelectorAll('.sidebar a').forEach(l => l.classList.remove('active'));
-          link.classList.add('active');
-          // Aquí podrías cambiar el contenido del dashboard según la vista
-        });
-      });
-
-      // ---------- DATOS ESTÁTICOS (CLUBES Y EVENTOS) ----------
+      // ----- DATOS -----
       const clubs = [
-        { name: 'Comunicación Social y Periodismo', icon: '📰', desc: 'Periodismo, radio y producción audiovisual.' },
-        { name: 'Debate', icon: '🎤', desc: 'Argumentación, oratoria y pensamiento crítico.' },
-        { name: 'Lectura', icon: '📚', desc: 'Club de lectura y análisis literario.' },
-        { name: 'Arte', icon: '🎨', desc: 'Pintura, dibujo y expresión artística.' },
-        { name: 'Baile', icon: '💃', desc: 'Danza contemporánea, folclore y ritmos latinos.' },
-        { name: 'Orientación y Vocación Universitaria', icon: '🎓', desc: 'Descubre tu camino profesional.' },
-        { name: 'Voluntariado y Acción Social', icon: '🤝', desc: 'Servicio comunitario y proyectos solidarios.' }
+        { id:1, nombre:'Comunicación Social y Periodismo', icon:'📰', desc:'Periodismo, radio, TV y producción audiovisual.', objetivos:'Formar comunicadores íntegros.', reunion:'Viernes 3:00 PM', lugar:'Aula 101' },
+        { id:2, nombre:'Debate', icon:'🎤', desc:'Argumentación, oratoria y pensamiento crítico.', objetivos:'Desarrollar habilidades de debate.', reunion:'Jueves 4:00 PM', lugar:'Salón Auditorio' },
+        { id:3, nombre:'Lectura', icon:'📚', desc:'Fomento de la lectura y análisis literario.', objetivos:'Crear hábito lector.', reunion:'Miércoles 2:30 PM', lugar:'Biblioteca' },
+        { id:4, nombre:'Arte', icon:'🎨', desc:'Pintura, dibujo, escultura y creatividad.', objetivos:'Expresión artística libre.', reunion:'Lunes 3:00 PM', lugar:'Taller de Arte' },
+        { id:5, nombre:'Baile', icon:'💃', desc:'Danza contemporánea, folclore y ritmos.', objetivos:'Promover la cultura dancística.', reunion:'Martes 4:00 PM', lugar:'Salón de Danza' },
+        { id:6, nombre:'Orientación y Vocación Universitaria', icon:'🎓', desc:'Descubre tu camino profesional.', objetivos:'Guiar en la elección de carrera.', reunion:'Viernes 2:00 PM', lugar:'Oficina Orientación' },
+        { id:7, nombre:'Voluntariado y Acción Social', icon:'🤝', desc:'Servicio comunitario y solidaridad.', objetivos:'Impactar positivamente la comunidad.', reunion:'Sábado 9:00 AM', lugar:'Comunidad' }
       ];
-
-      function renderClubs() {
-        const container = document.getElementById('clubsContainer');
-        if (!container) return;
-        container.innerHTML = clubs.map(c => `
-          <div class="card">
-            <span style="font-size:2.5rem;">${c.icon}</span>
-            <h3 style="margin:0.75rem 0 0.5rem;">${c.name}</h3>
-            <p>${c.desc}</p>
-          </div>
-        `).join('');
-      }
 
       const events = [
-        { title: 'Feria de Clubes 2026', date: '20 Julio 2026', desc: 'Exhibición de todos los clubes.' },
-        { title: 'Torneo de Debate Interescolar', date: '15 Agosto 2026', desc: 'Competencia regional.' },
-        { title: 'Taller de Liderazgo', date: '5 Septiembre 2026', desc: 'Invitado especial internacional.' }
+        { titulo:'Feria de Clubes 2026', fecha:'20 Julio 2026', lugar:'Patio Central', estado:'abierto', cupos:150 },
+        { titulo:'Torneo Debate Interescolar', fecha:'15 Agosto 2026', lugar:'Auditorio', estado:'abierto', cupos:80 },
+        { titulo:'Taller de Liderazgo', fecha:'5 Sept 2026', lugar:'Salón 201', estado:'cerrado', cupos:0 }
       ];
 
-      function renderEvents() {
-        const container = document.getElementById('eventsContainer');
-        if (!container) return;
-        container.innerHTML = events.map(e => `
-          <div class="card">
-            <h3>${e.title}</h3>
-            <p style="color:var(--clr-gold); font-weight:600;">${e.date}</p>
-            <p>${e.desc}</p>
-          </div>
-        `).join('');
+      const noticias = [
+        { titulo:'Inauguración del CLED 2026', fecha:'10 Ene 2026', club:'CLED', resumen:'Gran apertura del año escolar con todos los clubes.' },
+        { titulo:'Debate Nacional Ganado', fecha:'5 Mar 2026', club:'Debate', resumen:'Nuestro equipo ganó el primer lugar nacional.' },
+        { titulo:'Jornada de Voluntariado', fecha:'20 Abr 2026', club:'Voluntariado', resumen:'Recolección de útiles escolares para comunidades.' }
+      ];
+
+      // ----- LLENAR ESTADÍSTICAS -----
+      document.getElementById('statsContainer').innerHTML = [
+        { n:500, l:'Miembros activos' },{ n:7, l:'Clubes' },{ n:30, l:'Facilitadores' },
+        { n:25, l:'Proyectos' },{ n:40, l:'Eventos' },{ n:1200, l:'Horas voluntariado' },
+        { n:350, l:'Certificados' }
+      ].map(s => `<div class="card" style="text-align:center;"><h3>${s.n}+</h3><p>${s.l}</p></div>`).join('');
+
+      // ----- CLUBES -----
+      document.getElementById('clubesContainer').innerHTML = clubs.map(c => `
+        <div class="card">
+          <span style="font-size:2.5rem;">${c.icon}</span>
+          <h3>${c.nombre}</h3><p>${c.desc}</p>
+          <button class="btn btn-outline" onclick="verClub(${c.id})">Ver club</button>
+        </div>`).join('');
+
+      window.verClub = function(id) {
+        const c = clubs.find(x=>x.id===id);
+        document.getElementById('clubModalContent').innerHTML = `
+          <button class="modal-close" onclick="document.getElementById('clubModal').classList.remove('open')">&times;</button>
+          <h2>${c.icon} ${c.nombre}</h2><p>${c.desc}</p>
+          <h4>Objetivos:</h4><p>${c.objetivos}</p>
+          <p><strong>Reunión:</strong> ${c.reunion} - ${c.lugar}</p>
+          <p>Galería, proyectos y más info pronto.</p>`;
+        document.getElementById('clubModal').classList.add('open');
+      };
+
+      // ----- EVENTOS -----
+      document.getElementById('eventosContainer').innerHTML = events.map(e => `
+        <div class="card">
+          <h3>${e.titulo}</h3><p>📅 ${e.fecha} | 📍 ${e.lugar}</p>
+          <p>Estado: <strong>${e.estado==='abierto'?'✅ Registro abierto':'🔒 Cerrado'}</strong></p>
+          <p>Cupos: ${e.cupos}</p>
+          <button class="btn btn-gold" ${e.estado!=='abierto'?'disabled':''} onclick="abrirRegistro('${e.titulo}')">Registrarme</button>
+        </div>`).join('');
+
+      // ----- NOTICIAS -----
+      document.getElementById('noticiasContainer').innerHTML = noticias.map(n => `
+        <div class="card"><h3>${n.titulo}</h3><p>📰 ${n.club} | ${n.fecha}</p><p>${n.resumen}</p><a href="#">Leer más</a></div>`).join('');
+
+      // ----- PROYECTOS -----
+      document.getElementById('proyectosContainer').innerHTML = [
+        { titulo:'Periódico Escolar Digital', club:'Comunicación', estado:'En progreso' },
+        { titulo:'Liga de Debate Regional', club:'Debate', estado:'Finalizado' },
+        { titulo:'Mural Artístico', club:'Arte', estado:'En progreso' }
+      ].map(p => `<div class="card"><h3>${p.titulo}</h3><p>${p.club} | ${p.estado}</p></div>`).join('');
+
+      // ----- TESTIMONIOS -----
+      document.getElementById('testimoniosContainer').innerHTML = [
+        { nombre:'Ana Pérez', rol:'Estudiante', texto:'CLED me ayudó a encontrar mi pasión por el periodismo.' },
+        { nombre:'Prof. Ramírez', rol:'Facilitador', texto:'Ver el crecimiento de los chicos es increíble.' },
+        { nombre:'Lucía Méndez', rol:'Invitada', texto:'Eventos impecables, organización de primer nivel.' }
+      ].map(t => `<div class="card" style="background:rgba(255,255,255,0.1);color:white;"><p>"${t.texto}"</p><strong>${t.nombre}</strong> - ${t.rol}</div>`).join('');
+
+      // ----- IMPACTO -----
+      document.getElementById('impactoContainer').innerHTML = [
+        { n:500, l:'Miembros' },{ n:40, l:'Eventos' },{ n:1200, l:'Horas volunt.' },{ n:25, l:'Proyectos' }
+      ].map(i => `<div class="card" style="text-align:center;"><h3>${i.n}+</h3><p>${i.l}</p></div>`).join('');
+
+      // ----- RECONOCIMIENTOS -----
+      document.getElementById('reconocimientosContainer').innerHTML = [
+        { t:'Miembro destacado', d:'Juan Gómez - Debate' },
+        { t:'Facilitador destacado', d:'María Santos - Arte' },
+        { t:'Club destacado', d:'Voluntariado' }
+      ].map(r => `<div class="card"><h3>${r.t}</h3><p>${r.d}</p></div>`).join('');
+
+      // ----- FAQ -----
+      const faqs = [
+        { q:'¿Qué es el CLED?', a:'Club de Liderazgo Estudiantil y Desarrollo, una organización que fomenta el liderazgo juvenil.' },
+        { q:'¿Cómo puedo participar?', a:'Contactándonos o registrándote en un evento abierto.' },
+        { q:'¿Qué clubes existen?', a:'7 clubes: Comunicación, Debate, Lectura, Arte, Baile, Orientación, Voluntariado.' }
+      ];
+      document.getElementById('faqContainer').innerHTML = faqs.map(f => `<details style="margin-bottom:0.5rem;"><summary>${f.q}</summary><p>${f.a}</p></details>`).join('');
+
+      // ----- REGISTRO EVENTO (formulario dinámico) -----
+      window.abrirRegistro = function(eventoTitulo) {
+        document.getElementById('registroModal').classList.add('open');
+        document.getElementById('registroForm').dataset.evento = eventoTitulo;
+        actualizarCamposExtra();
+      };
+      document.getElementById('closeRegistroModal').addEventListener('click', ()=> document.getElementById('registroModal').classList.remove('open'));
+      document.getElementById('regRol').addEventListener('change', actualizarCamposExtra);
+
+      function actualizarCamposExtra() {
+        const rol = document.getElementById('regRol').value;
+        let html = '';
+        if (rol === 'Estudiante') {
+          html = `
+            <div class="form-group"><label>Grado</label><select id="regGrado"><option>3ro</option><option>4to</option><option>5to</option><option>6to</option></select></div>
+            <div class="form-group"><label>Sección</label><select><option>A</option><option>B</option><option>C</option><option>D</option></select></div>
+            <div class="form-group"><label>Modalidad</label><select id="regModalidad"><option value="">Seleccione</option><option>Académica</option><option>Técnica</option></select></div>
+            <div id="moduloContainer"></div>`;
+        } else if (rol === 'Docente') {
+          html = `<div class="form-group"><label>Modalidad</label><select><option>Académica</option><option>Técnica</option></select></div>
+                  <div class="form-group"><label>Área</label><input type="text"></div>`;
+        } else if (rol === 'Equipo de Gestión') {
+          html = `<div class="form-group"><label>Cargo</label><input type="text"></div><div class="form-group"><label>Departamento</label><input type="text"></div>`;
+        }
+        document.getElementById('camposExtra').innerHTML = html;
+        if (rol === 'Estudiante') {
+          document.getElementById('regModalidad').addEventListener('change', function() {
+            const grado = document.getElementById('regGrado')?.value;
+            const mod = this.value;
+            if (mod === 'Técnica' && grado && grado !== '3ro') {
+              document.getElementById('moduloContainer').innerHTML = `<div class="form-group"><label>Módulo</label><select><option>Informática</option><option>Gestión Administrativa</option><option>Refrigeración</option></select></div>`;
+            } else {
+              document.getElementById('moduloContainer').innerHTML = '';
+            }
+          });
+        }
       }
 
-      // ---------- INICIALIZAR ----------
-      renderClubs();
-      renderEvents();
+      document.getElementById('registroForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const evento = this.dataset.evento;
+        const nombre = document.getElementById('regNombre').value;
+        const apellido = document.getElementById('regApellido').value;
+        // Aquí guardarías en Supabase (si configurado)
+        const codigo = 'CLED-' + Math.random().toString(36).substr(2,8).toUpperCase();
+        document.getElementById('paseDigital').style.display = 'block';
+        document.getElementById('paseDigital').innerHTML = `
+          <h3>✅ Registro exitoso</h3>
+          <p><strong>Evento:</strong> ${evento}</p>
+          <p><strong>Código:</strong> ${codigo}</p>
+          <p><img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${codigo}" alt="QR"></p>
+          <p style="color:red;">📸 Captura este código. Sin él no podrás acceder al evento.</p>
+        `;
+        // Resetear formulario
+        this.reset();
+        document.getElementById('camposExtra').innerHTML = '';
+        alert('Registro guardado. Descarga tu pase.');
+      });
 
-      // Verificar si ya hay sesión al cargar
-      checkUserAndShowDashboard();
+      // ----- VALIDAR CERTIFICADO -----
+      document.getElementById('validarBtn').addEventListener('click', async () => {
+        const code = document.getElementById('certCode').value;
+        if (!code) return;
+        // Aquí consultarías Supabase
+        document.getElementById('validarResult').innerHTML = `<p>🔍 Certificado <strong>${code}</strong>: Estado <span style="color:green;">VÁLIDO</span> (simulado).</p>`;
+      });
 
-      // Si el usuario cierra sesión en otra pestaña, actualizar
-      if (supabase) {
-        supabase.auth.onAuthStateChange((event, session) => {
-          if (event === 'SIGNED_OUT') {
-            publicApp.style.display = 'block';
-            dashboardApp.style.display = 'none';
-          } else if (event === 'SIGNED_IN' && session) {
-            checkUserAndShowDashboard();
-          }
-        });
-      }
+      // ----- BUSCADOR GLOBAL -----
+      document.getElementById('globalSearch').addEventListener('input', function() {
+        const q = this.value.toLowerCase();
+        const resultados = [...clubs.filter(c=>c.nombre.toLowerCase().includes(q)).map(c=>c.nombre),
+                          ...events.filter(e=>e.titulo.toLowerCase().includes(q)).map(e=>e.titulo),
+                          ...noticias.filter(n=>n.titulo.toLowerCase().includes(q)).map(n=>n.titulo)];
+        document.getElementById('searchResults').innerHTML = resultados.length
+          ? '<ul>' + resultados.map(r => `<li>🔎 ${r}</li>`).join('') + '</ul>'
+          : (q ? '<p>Sin resultados.</p>' : '');
+      });
+
+      // ----- CAMPUS (simulado) -----
+      document.getElementById('campusBtn').addEventListener('click', ()=> alert('Redirigiendo al Campus CLED (login).'));
+      document.getElementById('heroCampusBtn').addEventListener('click', ()=> alert('Redirigiendo al Campus CLED (login).'));
+
+      // Cerrar modales con overlay
+      document.querySelectorAll('.modal-overlay').forEach(modal => {
+        modal.addEventListener('click', function(e) { if (e.target === modal) modal.classList.remove('open'); });
+      });
     })();
   </script>
 </body>
