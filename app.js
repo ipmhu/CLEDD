@@ -1,130 +1,86 @@
-
 // ============================================================
-// CLED – Aplicación principal (versión robusta)
+// CLED – Aplicación principal (renderizado inmediato)
 // ============================================================
 
-// --- Configuración Supabase (¡CAMBIA ESTO CON TUS DATOS!) ---
+// ---- CONFIGURACIÓN (Cámbiala cuando tengas tu proyecto) -----
 const SUPABASE_URL = 'https://qbtwbzvdmpshcullonfp.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFidHdienZkbXBzaGN1bGxvbmZwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM4ODA3MTUsImV4cCI6MjA5OTQ1NjcxNX0._tbQQ1Tz7ML9HWTzVXH2-3LuyDcvHcK1-jrBxxWtqUU';
 
-// --- Esperar a que la librería Supabase esté disponible ---
-function initSupabase(callback) {
-  if (typeof supabase !== 'undefined' && supabase.createClient) {
-    callback();
-  } else {
-    document.getElementById('app').innerHTML = '<p style="text-align:center;padding:2rem;">Cargando...</p>';
-    setTimeout(() => initSupabase(callback), 100);
+// ---- Cliente Supabase (se inicializará solo cuando se necesite) ----
+let supabaseClient = null;
+function getSupabase() {
+  if (!supabaseClient && typeof supabase !== 'undefined') {
+    supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
   }
+  return supabaseClient;
 }
 
-// --- Inicializar cuando el DOM esté listo ---
-function ready(fn) {
-  if (document.readyState !== 'loading') {
-    fn();
-  } else {
-    document.addEventListener('DOMContentLoaded', fn);
-  }
-}
+// ---- Tema ----
+let currentTheme = localStorage.getItem('theme') || 'light';
+document.documentElement.classList.toggle('dark', currentTheme === 'dark');
+window.toggleTheme = function() {
+  currentTheme = currentTheme === 'light' ? 'dark' : 'light';
+  localStorage.setItem('theme', currentTheme);
+  document.documentElement.classList.toggle('dark', currentTheme === 'dark');
+};
 
-// --- Inicio real ---
-ready(() => {
-  initSupabase(() => {
-    // Ahora sí podemos crear el cliente
-    window.supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-    // Arrancar la app
-    main();
-  });
+// ---- Router y renderizado principal ----
+window.addEventListener('hashchange', render);
+window.addEventListener('load', () => {
+  // Si no hay hash, forzamos #home
+  if (!window.location.hash) window.location.hash = '#home';
+  else render();
 });
 
-// --- Estado global ---
-let currentUser = null;
-let currentTheme = localStorage.getItem('theme') || 'light';
-
-// --- Función principal ---
-function main() {
-  // Aplicar tema
-  document.documentElement.classList.toggle('dark', currentTheme === 'dark');
-  // Escuchar cambios de hash
-  window.addEventListener('hashchange', render);
-  // Render inicial
-  render();
-}
-
-// --- Obtener referencia al cliente Supabase ---
-const supabase = () => window.supabaseClient;
-
-// --- Renderizar según la ruta ---
-async function render() {
+function render() {
   const hash = window.location.hash || '#home';
   const app = document.getElementById('app');
   if (!app) return;
 
-  // Verificar sesión
-  try {
-    const { data: { user } } = await supabase().auth.getUser();
-    if (user) {
-      const { data: profile } = await supabase()
-        .from('profiles')
-        .select('*')
-        .eq('id', user.id)
-        .single();
-      currentUser = { ...user, profile };
-    } else {
-      currentUser = null;
-    }
-  } catch (e) {
-    currentUser = null;
-  }
-
-  // Si ya está logueado y va a login, redirigir al dashboard
-  if (hash === '#login' && currentUser) {
-    window.location.hash = '#dashboard';
-    return;
-  }
-
-  // Proteger dashboard
-  if (hash === '#dashboard' && !currentUser) {
-    window.location.hash = '#login';
-    return;
-  }
-
-  // Renderizar la vista correspondiente
-  switch (hash) {
-    case '#login':
-      renderLogin();
-      break;
+  switch(hash) {
+    case '#home':   renderPublicHome(); break;
+    case '#login':  renderLogin(); break;
     case '#dashboard':
-      renderDashboard();
+      // Verificar si hay sesión antes de entrar al dashboard
+      checkAuth().then(user => {
+        if (user) renderDashboard(user);
+        else window.location.hash = '#login';
+      });
       break;
     default:
       renderPublicHome();
   }
 }
 
-// --- Toggle tema ---
-function toggleTheme() {
-  currentTheme = currentTheme === 'light' ? 'dark' : 'light';
-  localStorage.setItem('theme', currentTheme);
-  document.documentElement.classList.toggle('dark', currentTheme === 'dark');
+// ---- Verificar autenticación (asíncrona) ----
+async function checkAuth() {
+  try {
+    const client = getSupabase();
+    if (!client) return null;
+    const { data: { user } } = await client.auth.getUser();
+    if (user) {
+      const { data: profile } = await client
+        .from('profiles')
+        .select('*')
+        .eq('id', user.id)
+        .single();
+      return { ...user, profile };
+    }
+  } catch(e) { /* no hay sesión o error */ }
+  return null;
 }
 
-// --- Componente Logo ---
-function logoHTML() {
-  return `
-    <div class="logo" onclick="window.location.hash='#home'" style="cursor:pointer;">
-      <svg width="32" height="32" viewBox="0 0 100 100" fill="none">
-        <circle cx="50" cy="50" r="45" fill="#0A3D91"/>
-        <path d="M30 70 L50 30 L70 70" stroke="#D4AF37" stroke-width="6" fill="none"/>
-      </svg>
-      <span>CLED</span>
-    </div>`;
-}
-
-// --- Página pública ---
+// ---- Página pública (se muestra al instante) ----
 function renderPublicHome() {
   document.getElementById('app').innerHTML = `
     <nav class="public-nav" id="publicNav">
-      ${logoHTML()}
+      <div class="logo" onclick="window.location.hash='#home'" style="cursor:pointer;">
+        <svg width="32" height="32" viewBox="0 0 100 100" fill="none">
+          <circle cx="50" cy="50" r="45" fill="#0A3D91"/>
+          <path d="M30 70 L50 30 L70 70" stroke="#D4AF37" stroke-width="6" fill="none"/>
+        </svg>
+        <span>CLED</span>
+      </div>
       <div class="nav-links">
         <a href="#home">Inicio</a>
         <a href="#home">Clubes</a>
@@ -132,11 +88,11 @@ function renderPublicHome() {
         <a href="#home">Contacto</a>
       </div>
       <div style="display:flex;gap:0.5rem;align-items:center;">
-        <button class="btn btn-outline theme-toggle" onclick="toggleTheme()">🌓</button>
+        <button class="btn btn-outline" onclick="toggleTheme()">🌓</button>
         <button class="btn btn-primary" onclick="window.location.hash='#login'">Campus CLED</button>
       </div>
     </nav>
-    <section class="hero animate-fadeinup">
+    <section class="hero">
       <div>
         <h1 style="font-size:3rem;margin-bottom:1rem;">Club de Liderazgo<br>Estudiantil y Desarrollo</h1>
         <p style="font-size:1.25rem;opacity:0.9;margin-bottom:2rem;">Formando líderes en República Dominicana.</p>
@@ -160,19 +116,20 @@ function renderPublicHome() {
       <button class="btn btn-gold" onclick="window.location.hash='#login'">Solicitar ingreso</button>
     </section>
   `;
+  // Efecto scroll navbar
   window.addEventListener('scroll', () => {
     const nav = document.getElementById('publicNav');
     if (nav) nav.classList.toggle('nav-scrolled', window.scrollY > 50);
   });
 }
 
-// --- Página Login ---
+// ---- Página Login ----
 function renderLogin() {
   document.getElementById('app').innerHTML = `
     <div class="login-container">
       <div class="login-left">
         <div style="text-align:center;">
-          ${logoHTML()}
+          <div class="logo" style="color:white;">CLED</div>
           <h2 style="margin-top:2rem;">Campus CLED</h2>
         </div>
       </div>
@@ -193,6 +150,9 @@ function renderLogin() {
           <p style="margin-top:1rem;text-align:center;">
             <a href="#" onclick="event.preventDefault();sendMagicLink()">Acceder con enlace mágico</a>
           </p>
+          <p style="margin-top:1rem;text-align:center;">
+            <a href="#home">← Volver al inicio</a>
+          </p>
         </div>
       </div>
     </div>
@@ -201,27 +161,37 @@ function renderLogin() {
     e.preventDefault();
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
-    const { error } = await supabase().auth.signInWithPassword({ email, password });
+    const client = getSupabase();
+    if (!client) return alert('Error de conexión con Supabase.');
+    const { error } = await client.auth.signInWithPassword({ email, password });
     if (error) alert(error.message);
     else window.location.hash = '#dashboard';
   });
 }
 
-async function sendMagicLink() {
+window.sendMagicLink = async function() {
   const email = prompt('Ingresa tu correo para recibir el enlace mágico:');
   if (email) {
-    const { error } = await supabase().auth.signInWithOtp({ email });
+    const client = getSupabase();
+    if (!client) return alert('Error de conexión.');
+    const { error } = await client.auth.signInWithOtp({ email });
     if (error) alert(error.message);
     else alert('Revisa tu correo.');
   }
-}
+};
 
-// --- Dashboard ---
-function renderDashboard() {
+// ---- Dashboard (solo se muestra si hay sesión) ----
+function renderDashboard(user) {
   document.getElementById('app').innerHTML = `
     <div class="dashboard-layout">
-      <aside class="sidebar" id="sidebar">
-        ${logoHTML()}
+      <aside class="sidebar">
+        <div class="logo" style="cursor:pointer;" onclick="window.location.hash='#home'">
+          <svg width="32" height="32" viewBox="0 0 100 100" fill="none">
+            <circle cx="50" cy="50" r="45" fill="#0A3D91"/>
+            <path d="M30 70 L50 30 L70 70" stroke="#D4AF37" stroke-width="6" fill="none"/>
+          </svg>
+          <span>CLED</span>
+        </div>
         <nav style="margin-top:2rem;display:flex;flex-direction:column;gap:0.5rem;">
           <a href="#dashboard" class="active">📊 Dashboard</a>
           <a href="#dashboard">📅 Calendario</a>
@@ -235,7 +205,7 @@ function renderDashboard() {
       <main class="main-content">
         <div class="topbar">
           <h1>Dashboard</h1>
-          <span>${currentUser?.profile?.first_name || 'Usuario'}</span>
+          <span>${user.profile?.first_name || 'Usuario'}</span>
         </div>
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin-bottom:2rem;">
           <div class="card"><h3>Próximo Evento</h3><p>Feria de Clubes</p></div>
@@ -250,24 +220,23 @@ function renderDashboard() {
       </main>
     </div>
   `;
-  loadActivity();
-}
-
-async function loadActivity() {
-  const { data } = await supabase()
-    .from('activity_logs')
-    .select('*')
-    .order('created_at', { ascending: false })
-    .limit(5);
-  const feed = document.getElementById('activityFeed');
-  if (feed && data) {
-    feed.innerHTML = data.map(log => 
-      `<p>• ${log.action} - ${new Date(log.created_at).toLocaleString()}</p>`
-    ).join('');
+  // Cargar actividad desde Supabase (si hay conexión)
+  const client = getSupabase();
+  if (client) {
+    client.from('activity_logs').select('*').order('created_at', { ascending: false }).limit(5)
+      .then(({ data }) => {
+        const feed = document.getElementById('activityFeed');
+        if (feed && data) {
+          feed.innerHTML = data.map(log => 
+            `<p>• ${log.action} - ${new Date(log.created_at).toLocaleString()}</p>`
+          ).join('');
+        }
+      });
   }
 }
 
-async function signOut() {
-  await supabase().auth.signOut();
+window.signOut = async function() {
+  const client = getSupabase();
+  if (client) await client.auth.signOut();
   window.location.hash = '#home';
-}
+};
