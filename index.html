@@ -10,7 +10,6 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         * { margin:0; padding:0; box-sizing:border-box; }
         body { font-family: 'Inter', sans-serif; background: #FFFFFF; color: #0F172A; line-height: 1.6; }
@@ -43,7 +42,7 @@
         .hero { min-height:100vh; display:flex; align-items:center; background:linear-gradient(135deg, #0A3D91 0%, #02111D 100%); color:white; }
         .hero h1 { font-size: clamp(2.5rem, 6vw, 4.5rem); margin-bottom:1rem; }
         .section { padding:5rem 0; }
-        .section-title { font-size:2.25rem; font-weight:800; margin-bottom:0.75rem; color:#0A3D91; }
+        .section-title { font-size:2.25rem; font-weight:800; margin-bottom:1rem; color:#0A3D91; }
         .card { background:#FFFFFF; border-radius:16px; padding:1.75rem; box-shadow:0 4px 6px rgba(0,0,0,0.03); border:1px solid #E2E8F0; transition:all 0.25s; }
         .card:hover { transform:translateY(-6px); box-shadow:0 10px 25px rgba(0,0,0,0.08); }
         .grid-2 { display:grid; grid-template-columns: repeat(auto-fit, minmax(280px,1fr)); gap:1.5rem; }
@@ -71,7 +70,7 @@
     <header class="main-header">
         <div class="header-inner">
             <div class="logo">
-                <img src="LOGO_CLED.png" alt="CLED Logo">
+                <img src="LOGO_CLED_SF.png" alt="CLED Logo">
                 <span>CLED</span>
             </div>
             <div style="display:flex; align-items:center; gap:1rem;">
@@ -109,10 +108,12 @@
         </div>
     </section>
 
+    <!-- ESTADÍSTICAS -->
     <section class="section" style="padding-top:2rem;padding-bottom:2rem;">
         <div class="container"><div class="grid-4" id="statsContainer"></div></div>
     </section>
 
+    <!-- CLUBES -->
     <section id="clubes" class="section" style="background:#F8FAFC;">
         <div class="container">
             <h2 class="section-title">Clubes Destacados</h2>
@@ -120,6 +121,7 @@
         </div>
     </section>
 
+    <!-- EVENTOS -->
     <section id="eventos" class="section">
         <div class="container">
             <h2 class="section-title">Próximos Eventos</h2>
@@ -127,6 +129,7 @@
         </div>
     </section>
 
+    <!-- NOTICIAS -->
     <section id="noticias" class="section" style="background:#F8FAFC;">
         <div class="container">
             <h2 class="section-title">Noticias Recientes</h2>
@@ -134,6 +137,7 @@
         </div>
     </section>
 
+    <!-- TESTIMONIOS -->
     <section id="testimonios" class="section">
         <div class="container">
             <h2 class="section-title">Testimonios</h2>
@@ -141,6 +145,7 @@
         </div>
     </section>
 
+    <!-- BUSCADOR -->
     <section class="section" style="background:#0A3D91; color:white;">
         <div class="container" style="text-align:center;">
             <h2 style="color:white;">Buscador</h2>
@@ -152,7 +157,7 @@
     <footer class="footer">
         <div class="container footer-grid">
             <div>
-                <img src="LOGO_CLED.png" height="36" alt="CLED">
+                <img src="LOGO_CLED_SF.png" height="36" alt="CLED">
                 <p style="margin-top:0.5rem;">Formando líderes desde 2020.</p>
             </div>
             <div>
@@ -173,22 +178,11 @@
         </div>
     </footer>
 
+    <!-- MODALES -->
     <div class="modal-overlay" id="clubModal"><div class="modal-content" id="clubModalContent"></div></div>
     <div class="modal-overlay" id="registroModal"><div class="modal-content" id="registroModalContent"></div></div>
 
     <script>
-        // ========== CONFIGURACIÓN SUPABASE ==========
-        const SUPABASE_URL = 'https://xxxxxxx.supabase.co'; // ← CAMBIAR
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'; // ← CAMBIAR
-        let supabase;
-        try {
-            supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-            console.log('✅ Supabase conectado');
-        } catch (e) {
-            console.error('❌ Error al conectar Supabase:', e);
-            supabase = null;
-        }
-
         // ========== MENÚ ==========
         (function() {
             const menuBtn = document.getElementById('menuBtn');
@@ -201,84 +195,92 @@
             });
         })();
 
-        // ========== CARGAR DATOS ==========
-        async function fetchData(table, query = '*', order = null) {
-            if (!supabase) return { data: null, error: 'No Supabase' };
-            let q = supabase.from(table).select(query);
-            if (order) q = q.order(order.column, { ascending: order.asc });
-            return await q;
-        }
+        // ========== DATOS ESTÁTICOS ==========
+        const statsData = [
+            { n: 520, l: 'Miembros activos' },
+            { n: 7, l: 'Clubes' },
+            { n: 8, l: 'Facilitadores' },
+            { n: 15, l: 'Proyectos' },
+            { n: 12, l: 'Eventos' },
+            { n: 1350, l: 'Horas voluntariado' },
+            { n: 280, l: 'Certificados' }
+        ];
 
-        async function cargarStats() {
+        const clubsData = [
+            { id: '1', nombre: 'Comunicación Social y Periodismo', descripcion: 'Espacio dedicado al desarrollo de habilidades comunicacionales, periodísticas y de producción audiovisual.', portada: 'https://placehold.co/400x200?text=Comunicación', facilitador: 'Prof. Juan Carlos Mejía', foto: 'https://placehold.co/100?text=JM' },
+            { id: '2', nombre: 'Debate', descripcion: 'Club de argumentación, oratoria y pensamiento crítico donde se aprende a debatir con respeto y fundamentos.', portada: 'https://placehold.co/400x200?text=Debate', facilitador: 'Profa. Ana Patricia Sánchez', foto: 'https://placehold.co/100?text=AS' },
+            { id: '3', nombre: 'Lectura', descripcion: 'Fomento de la lectura crítica y el análisis literario a través de tertulias y talleres.', portada: 'https://placehold.co/400x200?text=Lectura', facilitador: 'Prof. Luis Manuel Vargas', foto: 'https://placehold.co/100?text=LV' },
+            { id: '4', nombre: 'Arte', descripcion: 'Exploración de las artes plásticas, dibujo, pintura y expresión creativa.', portada: 'https://placehold.co/400x200?text=Arte', facilitador: 'Lic. Carmen Rosa Jiménez', foto: 'https://placehold.co/100?text=CJ' },
+            { id: '5', nombre: 'Baile', descripcion: 'Danza contemporánea, folclore, ritmos latinos y expresión corporal.', portada: 'https://placehold.co/400x200?text=Baile', facilitador: 'Prof. Pedro Antonio Santos', foto: 'https://placehold.co/100?text=PS' },
+            { id: '6', nombre: 'Orientación y Vocación Universitaria', descripcion: 'Guía para descubrir intereses profesionales y planificar el futuro académico.', portada: 'https://placehold.co/400x200?text=Orientación', facilitador: 'Dra. Laura Mercedes Fernández', foto: 'https://placehold.co/100?text=LF' },
+            { id: '7', nombre: 'Voluntariado y Acción Social', descripcion: 'Proyectos solidarios y servicio a la comunidad para generar impacto social positivo.', portada: 'https://placehold.co/400x200?text=Voluntariado', facilitador: 'Lic. José Miguel Herrera', foto: 'https://placehold.co/100?text=JH' }
+        ];
+
+        const eventsData = [
+            { id: '1', titulo: 'Feria de Clubes 2026', descripcion: 'Exhibición de todos los clubes del CLED.', fecha: '2026-09-15', hora: '09:00', lugar: 'Patio Central', estado: 'abierto', cupos: 200, banner: 'https://placehold.co/400x150?text=Feria+Clubes' },
+            { id: '2', titulo: 'Torneo de Debate Interescolar', descripcion: 'Competencia regional de debate.', fecha: '2026-10-20', hora: '10:00', lugar: 'Auditorio Principal', estado: 'abierto', cupos: 80, banner: 'https://placehold.co/400x150?text=Torneo+Debate' },
+            { id: '3', titulo: 'Taller de Liderazgo Juvenil', descripcion: 'Invitado internacional compartirá claves para el liderazgo.', fecha: '2026-11-05', hora: '14:00', lugar: 'Salón 201', estado: 'cerrado', cupos: 50, banner: 'https://placehold.co/400x150?text=Liderazgo' },
+            { id: '4', titulo: 'Jornada de Voluntariado', descripcion: 'Limpieza de playas y reforestación.', fecha: '2026-12-01', hora: '08:00', lugar: 'Playa Guibia', estado: 'abierto', cupos: 100, banner: 'https://placehold.co/400x150?text=Voluntariado' }
+        ];
+
+        const noticiasData = [
+            { titulo: 'Inauguración del año escolar CLED 2026', contenido: 'Con gran entusiasmo iniciamos las actividades del Club de Liderazgo Estudiantil y Desarrollo...', fecha: '2026-08-20', imagen: 'https://placehold.co/400x150?text=Inauguración', club: 'General' },
+            { titulo: 'Club de Debate gana primer lugar nacional', contenido: 'Nuestro equipo de debate se coronó campeón en el Torneo Nacional Interescolar...', fecha: '2026-07-10', imagen: 'https://placehold.co/400x150?text=Debate+Campeón', club: 'Debate' },
+            { titulo: 'Nuevo taller de periodismo digital', contenido: 'El club de Comunicación Social abre inscripciones para el taller de redacción...', fecha: '2026-09-01', imagen: 'https://placehold.co/400x150?text=Taller+Periodismo', club: 'Comunicación' }
+        ];
+
+        const testimoniosData = [
+            { texto: 'Gracias al CLED descubrí mi pasión por el periodismo. Ahora soy locutor en una emisora local.', autor: 'Pedro Guzmán', rol: 'Estudiante', foto: 'https://placehold.co/80?text=PG' },
+            { texto: 'Ver el crecimiento de los chicos en debate es increíble. El CLED transforma vidas.', autor: 'Ana Patricia Sánchez', rol: 'Facilitadora', foto: 'https://placehold.co/80?text=AS' },
+            { texto: 'Los eventos del CLED son impecables. Organización de primer nivel.', autor: 'Lic. Ramón Emilio', rol: 'Invitado', foto: 'https://placehold.co/80?text=RE' }
+        ];
+
+        // ========== LLENAR SECCIONES ==========
+        function renderStats() {
             const container = document.getElementById('statsContainer');
-            const { data, error } = await fetchData('impact_stats');
-            if (error || !data || data.length === 0) {
-                container.innerHTML = '<p>Estadísticas no disponibles.</p>';
-                return;
-            }
-            const s = data[0];
-            const stats = [
-                { n: s.miembros_activos, l: 'Miembros activos' },
-                { n: s.clubes, l: 'Clubes' },
-                { n: s.facilitadores, l: 'Facilitadores' },
-                { n: s.proyectos, l: 'Proyectos' },
-                { n: s.eventos, l: 'Eventos' },
-                { n: s.horas_voluntariado, l: 'Horas voluntariado' },
-                { n: s.certificados, l: 'Certificados' }
-            ];
-            container.innerHTML = stats.map(s => `<div class="card" style="text-align:center;"><h3>${s.n}+</h3><p>${s.l}</p></div>`).join('');
+            container.innerHTML = statsData.map(s => `<div class="card" style="text-align:center;"><h3>${s.n}+</h3><p>${s.l}</p></div>`).join('');
         }
 
-        async function cargarClubes() {
+        function renderClubes() {
             const container = document.getElementById('clubesContainer');
-            const { data, error } = await fetchData('clubs');
-            if (error || !data || data.length === 0) {
-                container.innerHTML = '<p>No hay clubes por el momento.</p>';
-                return;
-            }
-            container.innerHTML = data.map(c => `
+            container.innerHTML = clubsData.map(c => `
                 <div class="card">
-                    <img src="${c.portada_url || 'https://placehold.co/400x200?text=Club'}" alt="${c.nombre}" style="width:100%;border-radius:12px;margin-bottom:1rem;">
+                    <img src="${c.portada}" alt="${c.nombre}" style="width:100%;border-radius:12px;margin-bottom:1rem;">
                     <h3>${c.nombre}</h3>
-                    <p>${c.descripcion || ''}</p>
+                    <p>${c.descripcion}</p>
                     <button class="btn btn-outline" onclick="verClub('${c.id}')">Ver club</button>
                 </div>`).join('');
         }
 
-        window.verClub = async (id) => {
-            if (!supabase) return;
-            const { data } = await supabase.from('clubs').select('*, facilitador:staff!clubs_facilitador_id_fkey(nombre, photo_url)').eq('id', id).single();
-            if (!data) return;
+        window.verClub = function(id) {
+            const club = clubsData.find(c => c.id === id);
+            if (!club) return;
             const modal = document.getElementById('clubModal');
             const content = document.getElementById('clubModalContent');
             content.innerHTML = `
                 <button class="modal-close" onclick="document.getElementById('clubModal').classList.remove('open')">&times;</button>
-                <img src="${data.portada_url || 'https://placehold.co/400x200?text=Club'}" style="width:100%;border-radius:12px;">
-                <h2>${data.nombre}</h2>
-                <p>${data.descripcion || ''}</p>
-                ${data.facilitador ? `<p><strong>Facilitador:</strong> ${data.facilitador.nombre} <img src="${data.facilitador.photo_url}" width="40" style="border-radius:50%;"></p>` : ''}
+                <img src="${club.portada}" style="width:100%;border-radius:12px;">
+                <h2 style="margin-top:1rem;">${club.nombre}</h2>
+                <p>${club.descripcion}</p>
+                <p><strong>Facilitador:</strong> ${club.facilitador} <img src="${club.foto}" width="40" style="border-radius:50%;"></p>
                 <button class="btn btn-gold" onclick="alert('Inscripción (próximamente)')">Inscribirme</button>`;
             modal.classList.add('open');
         };
 
-        async function cargarEventos() {
+        function renderEventos() {
             const container = document.getElementById('eventosContainer');
-            const { data, error } = await fetchData('events', '*', { column: 'fecha', asc: true });
-            if (error || !data || data.length === 0) {
-                container.innerHTML = '<p>No hay eventos por el momento.</p>';
-                return;
-            }
-            container.innerHTML = data.map(e => `
+            container.innerHTML = eventsData.map(e => `
                 <div class="card">
-                    <img src="${e.banner_url || 'https://placehold.co/400x150?text=Evento'}" style="width:100%;border-radius:12px;">
+                    <img src="${e.banner}" style="width:100%;border-radius:12px;">
                     <h3>${e.titulo}</h3>
-                    <p>📅 ${e.fecha} | 📍 ${e.lugar}</p>
+                    <p>📅 ${e.fecha} | ⏰ ${e.hora} | 📍 ${e.lugar}</p>
                     <p>${e.estado === 'abierto' ? '✅ Registro abierto' : '🔒 Cerrado'}</p>
                     <button class="btn btn-gold" ${e.estado !== 'abierto' ? 'disabled' : ''} onclick="abrirRegistro('${e.id}')">Registrarme</button>
                 </div>`).join('');
         }
 
-        window.abrirRegistro = (eventoId) => {
+        // Registro de eventos (sin Supabase)
+        window.abrirRegistro = function(eventoId) {
             const modal = document.getElementById('registroModal');
             const content = document.getElementById('registroModalContent');
             content.innerHTML = `
@@ -343,69 +345,12 @@
             }
         }
 
-        async function registrarEvento(e) {
+        function registrarEvento(e) {
             e.preventDefault();
-            if (!supabase) {
-                alert('Error: No hay conexión con la base de datos.');
-                return;
-            }
             const eventoId = e.target.dataset.evento;
-            const rol = document.getElementById('rol').value;
-            const nombre = document.getElementById('nombre').value.trim();
-            const apellido = document.getElementById('apellido').value.trim();
-            const email = document.getElementById('email').value.trim();
-
-            // Recoger datos adicionales según rol
-            let datosExtras = {};
-            if (rol === 'Estudiante') {
-                datosExtras = {
-                    grado: document.getElementById('grado').value,
-                    seccion: document.getElementById('seccion').value,
-                    modulo: document.getElementById('moduloGroup').style.display !== 'none' ? document.getElementById('modulo').value : ''
-                };
-            } else if (rol === 'Docente') {
-                datosExtras = {
-                    modalidad: document.getElementById('modalidad').value,
-                    area: document.getElementById('areaGroup').style.display !== 'none' ? document.getElementById('area').value : '',
-                    tecnico: document.getElementById('tecnicoGroup').style.display !== 'none' ? document.getElementById('tecnico').value : ''
-                };
-            } else if (rol === 'Gestion') {
-                datosExtras = {
-                    cargo: document.getElementById('rolGestion').value
-                };
-            }
-
-            const datosCompletos = {
-                nombres: nombre,
-                apellidos: apellido,
-                correo: email,
-                ...datosExtras
-            };
-
-            // Insertar registro
-            const { data: registro, error: errorRegistro } = await supabase
-                .from('event_registrations')
-                .insert({ event_id: eventoId, rol, datos: datosCompletos })
-                .select()
-                .single();
-
-            if (errorRegistro) {
-                alert('Error al guardar: ' + errorRegistro.message);
-                return;
-            }
-
-            // Generar código único
+            const nombre = document.getElementById('nombre').value;
+            const apellido = document.getElementById('apellido').value;
             const codigo = 'CLED-' + Math.random().toString(36).substr(2, 8).toUpperCase();
-            const { error: errorCodigo } = await supabase
-                .from('event_codes')
-                .insert({ registration_id: registro.id, codigo });
-
-            if (errorCodigo) {
-                alert('Error generando código QR');
-                return;
-            }
-
-            // Mostrar pase digital
             const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${codigo}`;
             document.getElementById('paseDigital').innerHTML = `
                 <h3>✅ Registro exitoso</h3>
@@ -415,7 +360,7 @@
                 <button class="btn btn-primary" onclick="descargarPDF('${nombre} ${apellido}', '${eventoId}', '${codigo}')">Descargar PDF</button>`;
         }
 
-        window.descargarPDF = (nombre, eventoId, codigo) => {
+        window.descargarPDF = function(nombre, eventoId, codigo) {
             const qrImg = document.querySelector('#paseDigital img').src;
             const win = window.open('', '_blank');
             win.document.write(`
@@ -428,74 +373,53 @@
             win.print();
         };
 
-        async function cargarNoticias() {
+        function renderNoticias() {
             const container = document.getElementById('noticiasContainer');
-            const { data, error } = await fetchData('noticias', '*', { column: 'fecha', asc: false });
-            if (error || !data || data.length === 0) {
-                container.innerHTML = '<p>No hay noticias por el momento.</p>';
-                return;
-            }
-            container.innerHTML = data.map(n => `
+            container.innerHTML = noticiasData.map(n => `
                 <div class="card">
-                    <img src="${n.imagen_url || 'https://placehold.co/400x150?text=Noticia'}" style="width:100%;border-radius:12px;">
+                    <img src="${n.imagen}" style="width:100%;border-radius:12px;">
                     <h3>${n.titulo}</h3>
-                    <p>📰 ${n.club_id ? 'Club' : 'General'} | ${n.fecha}</p>
-                    <p>${n.contenido ? n.contenido.substring(0,100)+'...' : ''}</p>
+                    <p>📰 ${n.club} | ${n.fecha}</p>
+                    <p>${n.contenido.substring(0,100)}...</p>
                     <a href="#" style="color:#0A3D91; font-weight:600;">Leer más</a>
                 </div>`).join('');
         }
 
-        async function cargarTestimonios() {
+        function renderTestimonios() {
             const container = document.getElementById('testimoniosContainer');
-            const { data, error } = await fetchData('testimonials');
-            if (error || !data || data.length === 0) {
-                container.innerHTML = '<p>No hay testimonios aún.</p>';
-                return;
-            }
-            container.innerHTML = data.map(t => `
+            container.innerHTML = testimoniosData.map(t => `
                 <div class="card" style="text-align:center;">
-                    <img src="${t.foto_url || 'https://placehold.co/80'}" width="60" style="border-radius:50%;margin-bottom:1rem;">
+                    <img src="${t.foto}" width="60" style="border-radius:50%;margin-bottom:1rem;">
                     <p>"${t.texto}"</p>
                     <strong>${t.autor}</strong>
-                    <p style="color:#64748B;">${t.rol_autor}</p>
+                    <p style="color:#64748B;">${t.rol}</p>
                 </div>`).join('');
         }
 
-        // Buscador
-        document.getElementById('globalSearch').addEventListener('input', async function() {
+        // Buscador local
+        document.getElementById('globalSearch').addEventListener('input', function() {
             const q = this.value.trim().toLowerCase();
             const resultsDiv = document.getElementById('searchResults');
             if (!q) { resultsDiv.style.display = 'none'; return; }
-            if (!supabase) return;
-            const [clubes, eventos, noticias] = await Promise.all([
-                supabase.from('clubs').select('nombre').ilike('nombre', `%${q}%`),
-                supabase.from('events').select('titulo').ilike('titulo', `%${q}%`),
-                supabase.from('noticias').select('titulo').ilike('titulo', `%${q}%`)
-            ]);
             const resultados = [
-                ...(clubes.data || []).map(c => '🏫 ' + c.nombre),
-                ...(eventos.data || []).map(e => '📅 ' + e.titulo),
-                ...(noticias.data || []).map(n => '📰 ' + n.titulo)
+                ...clubsData.filter(c => c.nombre.toLowerCase().includes(q)).map(c => '🏫 ' + c.nombre),
+                ...eventsData.filter(e => e.titulo.toLowerCase().includes(q)).map(e => '📅 ' + e.titulo),
+                ...noticiasData.filter(n => n.titulo.toLowerCase().includes(q)).map(n => '📰 ' + n.titulo)
             ];
             resultsDiv.innerHTML = resultados.length ? resultados.map(r => `<div>${r}</div>`).join('') : '<div>Sin resultados</div>';
             resultsDiv.style.display = 'block';
         });
 
-        // Iniciar carga
-        window.addEventListener('DOMContentLoaded', () => {
-            if (supabase) {
-                cargarStats();
-                cargarClubes();
-                cargarEventos();
-                cargarNoticias();
-                cargarTestimonios();
-            } else {
-                document.getElementById('statsContainer').innerHTML = '';
-                document.getElementById('clubesContainer').innerHTML = '<p>No hay clubes por el momento.</p>';
-                document.getElementById('eventosContainer').innerHTML = '<p>No hay eventos por el momento.</p>';
-                document.getElementById('noticiasContainer').innerHTML = '<p>No hay noticias por el momento.</p>';
-                document.getElementById('testimoniosContainer').innerHTML = '<p>No hay testimonios aún.</p>';
-            }
+        // Iniciar todo
+        renderStats();
+        renderClubes();
+        renderEventos();
+        renderNoticias();
+        renderTestimonios();
+
+        // Cerrar modales al hacer clic fuera
+        document.querySelectorAll('.modal-overlay').forEach(modal => {
+            modal.addEventListener('click', function(e) { if (e.target === modal) modal.classList.remove('open'); });
         });
     </script>
 </body>
