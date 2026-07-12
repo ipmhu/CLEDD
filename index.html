@@ -5,34 +5,548 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CLED – Club de Liderazgo Estudiantil y Desarrollo</title>
   <!-- Fuentes -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <!-- Estilos -->
-  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    /* ========== RESET & VARIABLES ========== */
+    *,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --clr-primary: #0A3D91;
+      --clr-primary-light: #3b6cb4;
+      --clr-gold: #D4AF37;
+      --clr-gold-dark: #b8960f;
+      --clr-white: #FFFFFF;
+      --clr-gray-light: #F5F5F5;
+      --clr-gray-dark: #374151;
+      --bg-light: #ffffff;
+      --bg-dark: #0f172a;
+      --text-light: #0f172a;
+      --text-dark: #f1f5f9;
+      --card-light: #f8fafc;
+      --card-dark: #1e293b;
+      --border-light: #e2e8f0;
+      --border-dark: #334155;
+      --radius: 16px;
+      --shadow: 0 10px 25px -5px rgba(0,0,0,0.05), 0 8px 10px -6px rgba(0,0,0,0.02);
+      --shadow-lg: 0 20px 25px -5px rgba(0,0,0,0.08), 0 10px 10px -5px rgba(0,0,0,0.03);
+      --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .dark {
+      --bg: var(--bg-dark);
+      --text: var(--text-dark);
+      --card: var(--card-dark);
+      --border: var(--border-dark);
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-light);
+      color: var(--text-light);
+      line-height: 1.6;
+      transition: background var(--transition), color var(--transition);
+      overflow-x: hidden;
+    }
+    body.dark {
+      background: var(--bg-dark);
+      color: var(--text-dark);
+    }
+    h1, h2, h3, h4 { font-family: 'Montserrat', sans-serif; font-weight: 700; line-height: 1.2; }
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; display: block; }
+
+    /* ========== UTILIDADES ========== */
+    .container { width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; }
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+      padding: 0.75rem 1.8rem; border-radius: 9999px; font-weight: 600; font-size: 0.95rem;
+      cursor: pointer; border: none; transition: all var(--transition); text-align: center;
+    }
+    .btn-primary { background: var(--clr-primary); color: white; }
+    .btn-primary:hover { background: #083274; transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+    .btn-gold { background: var(--clr-gold); color: var(--clr-gray-dark); }
+    .btn-gold:hover { background: var(--clr-gold-dark); transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+    .btn-outline {
+      background: transparent; border: 2px solid var(--border); color: var(--text);
+      backdrop-filter: blur(4px);
+    }
+    .btn-outline:hover { background: var(--border); }
+    .section { padding: 5rem 0; }
+    .section-title {
+      font-size: 2.5rem; font-weight: 800; margin-bottom: 1rem;
+      background: linear-gradient(135deg, var(--clr-primary), #1e40af);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .dark .section-title {
+      background: linear-gradient(135deg, #60a5fa, #93c5fd);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+
+    /* ========== HEADER / NAV ========== */
+    .main-header {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      padding: 1rem 0;
+      transition: background var(--transition), box-shadow var(--transition);
+    }
+    .main-header.scrolled {
+      background: rgba(255,255,255,0.85); backdrop-filter: blur(12px);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    .dark .main-header.scrolled {
+      background: rgba(15,23,42,0.85);
+    }
+    .header-inner {
+      display: flex; align-items: center; justify-content: space-between;
+      max-width: 1200px; margin: 0 auto; padding: 0 1.5rem;
+    }
+    .logo {
+      display: flex; align-items: center; gap: 0.75rem; font-weight: 800;
+      font-size: 1.5rem; font-family: 'Montserrat', sans-serif; color: var(--clr-primary);
+    }
+    .dark .logo { color: #60a5fa; }
+    .nav-links { display: flex; gap: 1.5rem; align-items: center; }
+    .nav-links a {
+      font-weight: 500; position: relative; padding: 0.25rem 0;
+      transition: color var(--transition);
+    }
+    .nav-links a::after {
+      content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 2px;
+      background: var(--clr-gold); transition: width var(--transition);
+    }
+    .nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
+    .theme-toggle {
+      background: none; border: none; font-size: 1.5rem; cursor: pointer;
+      padding: 0.3rem; border-radius: 50%; transition: background var(--transition);
+    }
+    .theme-toggle:hover { background: var(--border); }
+
+    /* ========== HERO ========== */
+    .hero {
+      min-height: 100vh; display: flex; align-items: center;
+      background: linear-gradient(135deg, #0A3D91 0%, #02111D 100%);
+      color: white; position: relative; overflow: hidden;
+    }
+    .hero::before {
+      content: ''; position: absolute; top: -50%; right: -20%; width: 80%; height: 200%;
+      background: radial-gradient(circle, rgba(212,175,55,0.15) 0%, transparent 70%);
+      transform: rotate(15deg);
+    }
+    .hero-content { position: relative; z-index: 10; }
+    .hero h1 { font-size: clamp(2.5rem, 6vw, 4.5rem); margin-bottom: 1.5rem; }
+    .hero p { font-size: 1.25rem; opacity: 0.9; max-width: 600px; margin-bottom: 2.5rem; }
+
+    /* ========== CARDS ========== */
+    .card {
+      background: var(--card); border-radius: var(--radius); padding: 2rem;
+      box-shadow: var(--shadow); transition: all var(--transition);
+      border: 1px solid var(--border);
+    }
+    .card:hover { transform: translateY(-8px); box-shadow: var(--shadow-lg); }
+
+    /* ========== CLUBES GRID ========== */
+    .clubs-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem; margin-top: 2.5rem;
+    }
+
+    /* ========== LOGIN MODAL ========== */
+    .modal {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(6px);
+      display: flex; align-items: center; justify-content: center; z-index: 1000;
+      opacity: 0; pointer-events: none; transition: opacity 0.3s;
+    }
+    .modal.open { opacity: 1; pointer-events: auto; }
+    .modal-content {
+      background: var(--bg); border-radius: var(--radius); max-width: 450px; width: 90%;
+      padding: 2.5rem; position: relative; box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+    }
+    .modal-close {
+      position: absolute; top: 1rem; right: 1.5rem; background: none; border: none;
+      font-size: 1.5rem; cursor: pointer; color: var(--text);
+    }
+    .form-group { margin-bottom: 1.5rem; }
+    .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; }
+    .form-group input {
+      width: 100%; padding: 0.75rem 1rem; border: 2px solid var(--border);
+      border-radius: var(--radius); background: var(--card); color: var(--text);
+      font-size: 1rem; transition: border var(--transition);
+    }
+    .form-group input:focus { outline: none; border-color: var(--clr-primary); }
+
+    /* ========== DASHBOARD ========== */
+    .dashboard-container { display: flex; height: 100vh; }
+    .sidebar {
+      width: 260px; background: var(--card); border-right: 1px solid var(--border);
+      padding: 1.5rem; display: flex; flex-direction: column; transition: width 0.3s;
+    }
+    .sidebar a {
+      display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem;
+      border-radius: var(--radius); color: var(--text); font-weight: 500;
+      transition: all var(--transition);
+    }
+    .sidebar a:hover, .sidebar a.active { background: var(--clr-primary); color: white; }
+    .main-content { flex: 1; overflow-y: auto; padding: 2rem; }
+
+    /* ========== FOOTER ========== */
+    .footer {
+      background: var(--clr-gray-dark); color: white; padding: 3rem 0;
+      margin-top: 4rem;
+    }
+    .footer-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 2rem;
+    }
+
+    /* ========== RESPONSIVE ========== */
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .sidebar { width: 0; overflow: hidden; padding: 0; }
+    }
+  </style>
 </head>
 <body>
-  <!-- Contenido inicial por si JS tarda o falla -->
-  <div id="app">
-    <nav class="public-nav">
-      <div class="logo">CLED</div>
-      <div class="nav-links">
-        <a href="#home">Inicio</a>
-        <a href="#home">Clubes</a>
-        <a href="#home">Eventos</a>
-        <a href="#home">Contacto</a>
+  <!-- ==================== PORTAL PÚBLICO ==================== -->
+  <div id="publicApp">
+    <!-- Header -->
+    <header class="main-header" id="header">
+      <div class="header-inner">
+        <div class="logo">
+          <svg width="36" height="36" viewBox="0 0 100 100" fill="none">
+            <circle cx="50" cy="50" r="48" fill="#0A3D91"/>
+            <path d="M30 70 L50 30 L70 70" stroke="#D4AF37" stroke-width="6" fill="none"/>
+          </svg>
+          <span>CLED</span>
+        </div>
+        <nav class="nav-links" id="navLinks">
+          <a href="#inicio" class="active">Inicio</a>
+          <a href="#nosotros">Nosotros</a>
+          <a href="#clubes">Clubes</a>
+          <a href="#eventos">Eventos</a>
+          <a href="#contacto">Contacto</a>
+        </nav>
+        <div style="display:flex;gap:0.75rem;align-items:center;">
+          <button class="theme-toggle" id="themeToggle" aria-label="Cambiar tema">🌙</button>
+          <button class="btn btn-primary" id="openLoginBtn">Campus CLED</button>
+        </div>
       </div>
-      <button class="btn btn-primary" onclick="window.location.hash='#login'">Campus CLED</button>
-    </nav>
-    <section class="hero">
-      <h1>Club de Liderazgo<br>Estudiantil y Desarrollo</h1>
-      <p>Formando líderes en República Dominicana.</p>
-      <button class="btn btn-gold" onclick="window.location.hash='#login'">Ingresar al Campus</button>
+    </header>
+
+    <!-- Hero -->
+    <section id="inicio" class="hero">
+      <div class="container hero-content">
+        <h1>Club de Liderazgo<br>Estudiantil y Desarrollo</h1>
+        <p>Impulsamos el talento joven dominicano a través de la comunicación, el arte, el debate y el servicio social. Sé parte de la nueva generación de líderes.</p>
+        <div style="display:flex;gap:1rem;flex-wrap:wrap;">
+          <button class="btn btn-gold" id="heroCampusBtn">Ingresar al Campus</button>
+          <button class="btn btn-outline" style="color:white;border-color:rgba(255,255,255,0.4);" onclick="document.getElementById('nosotros').scrollIntoView({behavior:'smooth'})">Conocer más</button>
+        </div>
+      </div>
     </section>
-    <p style="text-align:center;padding:2rem;">Cargando aplicación...</p>
+
+    <!-- Nosotros -->
+    <section id="nosotros" class="section">
+      <div class="container">
+        <h2 class="section-title">Nuestra Esencia</h2>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:2rem;margin-top:2rem;">
+          <div class="card">
+            <h3>Comunicación</h3>
+            <p>Desarrollamos habilidades de expresión oral y escrita que trascienden el aula y preparan para el mundo profesional.</p>
+          </div>
+          <div class="card">
+            <h3>Liderazgo</h3>
+            <p>Formamos jóvenes capaces de inspirar, guiar y transformar su entorno con integridad y visión.</p>
+          </div>
+          <div class="card">
+            <h3>Desarrollo</h3>
+            <p>Impulsamos el crecimiento personal y profesional de cada miembro a través de experiencias significativas.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Clubes -->
+    <section id="clubes" class="section" style="background: var(--card);">
+      <div class="container">
+        <h2 class="section-title">Nuestros Clubes</h2>
+        <div class="clubs-grid" id="clubsContainer">
+          <!-- Se llena con JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Eventos -->
+    <section id="eventos" class="section">
+      <div class="container">
+        <h2 class="section-title">Próximos Eventos</h2>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem;margin-top:2rem;" id="eventsContainer">
+          <!-- Eventos dinámicos -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container">
+        <div class="footer-grid">
+          <div>
+            <div class="logo" style="color:white;margin-bottom:1rem;">CLED</div>
+            <p style="opacity:0.8;">Formando líderes en República Dominicana desde 2020.</p>
+          </div>
+          <div>
+            <h4 style="margin-bottom:1rem;">Enlaces</h4>
+            <ul style="list-style:none;opacity:0.8;">
+              <li><a href="#inicio">Inicio</a></li>
+              <li><a href="#nosotros">Nosotros</a></li>
+              <li><a href="#clubes">Clubes</a></li>
+              <li><a href="#eventos">Eventos</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4 style="margin-bottom:1rem;">Contacto</h4>
+            <p style="opacity:0.8;">info@cled.edu.do<br>Santo Domingo, R.D.</p>
+          </div>
+        </div>
+      </div>
+    </footer>
   </div>
 
-  <!-- Supabase (solo para login/dashboard) -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <!-- App -->
-  <script src="app.js"></script>
+  <!-- ==================== LOGIN MODAL ==================== -->
+  <div class="modal" id="loginModal">
+    <div class="modal-content">
+      <button class="modal-close" id="closeModalBtn">&times;</button>
+      <h2 style="margin-bottom:1.5rem;">Iniciar Sesión</h2>
+      <form id="loginForm">
+        <div class="form-group">
+          <label>Correo electrónico</label>
+          <input type="email" id="loginEmail" required placeholder="tu@correo.com">
+        </div>
+        <div class="form-group">
+          <label>Contraseña</label>
+          <input type="password" id="loginPassword" required placeholder="••••••••">
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100%;">Ingresar</button>
+      </form>
+      <p style="margin-top:1rem;text-align:center;">
+        <a href="#" id="magicLinkBtn" style="color:var(--clr-primary);">Acceder con enlace mágico</a>
+      </p>
+    </div>
+  </div>
+
+  <!-- ==================== DASHBOARD (OCULTO INICIALMENTE) ==================== -->
+  <div id="dashboardApp" style="display:none;">
+    <div class="dashboard-container">
+      <aside class="sidebar" id="sidebar">
+        <div class="logo" style="margin-bottom:2rem;">CLED</div>
+        <nav style="display:flex;flex-direction:column;gap:0.5rem;">
+          <a href="#" class="active" data-view="inicio">📊 Dashboard</a>
+          <a href="#" data-view="calendario">📅 Calendario</a>
+          <a href="#" data-view="recursos">📚 Recursos</a>
+          <a href="#" data-view="equipos">👥 Equipos</a>
+        </nav>
+        <button class="btn btn-outline" style="margin-top:auto;" onclick="signOut()">Cerrar sesión</button>
+      </aside>
+      <main class="main-content" id="dashboardContent">
+        <!-- Contenido dinámico -->
+      </main>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      // ---------- CONFIGURACIÓN SUPABASE ----------
+      const SUPABASE_URL = 'https://xxxxxxx.supabase.co'; // ← CAMBIAR
+      const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'; // ← CAMBIAR
+
+      let supabase;
+      try {
+        supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      } catch(e) {
+        console.warn('Supabase no configurado. Funcionalidad limitada.');
+      }
+
+      // ---------- ELEMENTOS DOM ----------
+      const publicApp = document.getElementById('publicApp');
+      const dashboardApp = document.getElementById('dashboardApp');
+      const loginModal = document.getElementById('loginModal');
+      const openLoginBtn = document.getElementById('openLoginBtn');
+      const heroCampusBtn = document.getElementById('heroCampusBtn');
+      const closeModalBtn = document.getElementById('closeModalBtn');
+      const loginForm = document.getElementById('loginForm');
+      const magicLinkBtn = document.getElementById('magicLinkBtn');
+      const themeToggle = document.getElementById('themeToggle');
+      const header = document.getElementById('header');
+      const navLinks = document.querySelectorAll('.nav-links a');
+
+      // ---------- TEMA OSCURO ----------
+      const setTheme = (dark) => {
+        document.body.classList.toggle('dark', dark);
+        themeToggle.textContent = dark ? '☀️' : '🌙';
+        localStorage.setItem('theme', dark ? 'dark' : 'light');
+      };
+      const currentTheme = localStorage.getItem('theme') || 'light';
+      setTheme(currentTheme === 'dark');
+      themeToggle.addEventListener('click', () => setTheme(!document.body.classList.contains('dark')));
+
+      // ---------- NAV SCROLL ----------
+      window.addEventListener('scroll', () => {
+        header.classList.toggle('scrolled', window.scrollY > 50);
+        // Actualizar active en nav según sección visible
+        const sections = ['inicio','nosotros','clubes','eventos'];
+        let current = '';
+        sections.forEach(id => {
+          const sec = document.getElementById(id);
+          if (sec && sec.getBoundingClientRect().top <= 100) current = id;
+        });
+        navLinks.forEach(link => {
+          link.classList.remove('active');
+          if (link.getAttribute('href') === '#'+current) link.classList.add('active');
+        });
+      });
+
+      // ---------- MODAL LOGIN ----------
+      const openModal = () => loginModal.classList.add('open');
+      const closeModal = () => loginModal.classList.remove('open');
+      openLoginBtn.addEventListener('click', openModal);
+      heroCampusBtn.addEventListener('click', openModal);
+      closeModalBtn.addEventListener('click', closeModal);
+      loginModal.addEventListener('click', (e) => { if (e.target === loginModal) closeModal(); });
+
+      // Login con email/password
+      loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        if (!supabase) return alert('Conexión con Supabase no configurada.');
+        const email = document.getElementById('loginEmail').value;
+        const password = document.getElementById('loginPassword').value;
+        const { error } = await supabase.auth.signInWithPassword({ email, password });
+        if (error) return alert(error.message);
+        closeModal();
+        checkUserAndShowDashboard();
+      });
+
+      // Magic link
+      magicLinkBtn.addEventListener('click', async (e) => {
+        e.preventDefault();
+        const email = prompt('Ingresa tu correo para recibir el enlace mágico:');
+        if (email && supabase) {
+          const { error } = await supabase.auth.signInWithOtp({ email });
+          if (error) alert(error.message);
+          else alert('Revisa tu correo.');
+        }
+      });
+
+      // ---------- CERRAR SESIÓN ----------
+      window.signOut = async function() {
+        if (supabase) await supabase.auth.signOut();
+        publicApp.style.display = 'block';
+        dashboardApp.style.display = 'none';
+        window.location.hash = '#inicio';
+      };
+
+      // ---------- DASHBOARD ----------
+      async function checkUserAndShowDashboard() {
+        if (!supabase) return;
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+          publicApp.style.display = 'none';
+          dashboardApp.style.display = 'block';
+          loadDashboardData(user);
+        } else {
+          publicApp.style.display = 'block';
+          dashboardApp.style.display = 'none';
+        }
+      }
+
+      async function loadDashboardData(user) {
+        const content = document.getElementById('dashboardContent');
+        // Obtener perfil
+        let profile = null;
+        if (supabase) {
+          const { data } = await supabase.from('profiles').select('*').eq('id', user.id).single();
+          profile = data;
+        }
+        const userName = profile ? `${profile.first_name} ${profile.last_name}` : user.email;
+        content.innerHTML = `
+          <h1>Bienvenido, ${userName}</h1>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.5rem;margin:2rem 0;">
+            <div class="card"><h3>Próximo Evento</h3><p>Feria de Clubes 2026</p></div>
+            <div class="card"><h3>Próxima Reunión</h3><p>Debate - Vie 3:00 PM</p></div>
+            <div class="card"><h3>Promedio</h3><p>92.5</p></div>
+            <div class="card"><h3>Equipo</h3><p>Equipo Alpha</p></div>
+          </div>
+        `;
+      }
+
+      // Navegación interna del dashboard (simulada)
+      document.querySelectorAll('.sidebar a[data-view]').forEach(link => {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          document.querySelectorAll('.sidebar a').forEach(l => l.classList.remove('active'));
+          link.classList.add('active');
+          // Aquí podrías cambiar el contenido del dashboard según la vista
+        });
+      });
+
+      // ---------- DATOS ESTÁTICOS (CLUBES Y EVENTOS) ----------
+      const clubs = [
+        { name: 'Comunicación Social y Periodismo', icon: '📰', desc: 'Periodismo, radio y producción audiovisual.' },
+        { name: 'Debate', icon: '🎤', desc: 'Argumentación, oratoria y pensamiento crítico.' },
+        { name: 'Lectura', icon: '📚', desc: 'Club de lectura y análisis literario.' },
+        { name: 'Arte', icon: '🎨', desc: 'Pintura, dibujo y expresión artística.' },
+        { name: 'Baile', icon: '💃', desc: 'Danza contemporánea, folclore y ritmos latinos.' },
+        { name: 'Orientación y Vocación Universitaria', icon: '🎓', desc: 'Descubre tu camino profesional.' },
+        { name: 'Voluntariado y Acción Social', icon: '🤝', desc: 'Servicio comunitario y proyectos solidarios.' }
+      ];
+
+      function renderClubs() {
+        const container = document.getElementById('clubsContainer');
+        if (!container) return;
+        container.innerHTML = clubs.map(c => `
+          <div class="card">
+            <span style="font-size:2.5rem;">${c.icon}</span>
+            <h3 style="margin:0.75rem 0 0.5rem;">${c.name}</h3>
+            <p>${c.desc}</p>
+          </div>
+        `).join('');
+      }
+
+      const events = [
+        { title: 'Feria de Clubes 2026', date: '20 Julio 2026', desc: 'Exhibición de todos los clubes.' },
+        { title: 'Torneo de Debate Interescolar', date: '15 Agosto 2026', desc: 'Competencia regional.' },
+        { title: 'Taller de Liderazgo', date: '5 Septiembre 2026', desc: 'Invitado especial internacional.' }
+      ];
+
+      function renderEvents() {
+        const container = document.getElementById('eventsContainer');
+        if (!container) return;
+        container.innerHTML = events.map(e => `
+          <div class="card">
+            <h3>${e.title}</h3>
+            <p style="color:var(--clr-gold); font-weight:600;">${e.date}</p>
+            <p>${e.desc}</p>
+          </div>
+        `).join('');
+      }
+
+      // ---------- INICIALIZAR ----------
+      renderClubs();
+      renderEvents();
+
+      // Verificar si ya hay sesión al cargar
+      checkUserAndShowDashboard();
+
+      // Si el usuario cierra sesión en otra pestaña, actualizar
+      if (supabase) {
+        supabase.auth.onAuthStateChange((event, session) => {
+          if (event === 'SIGNED_OUT') {
+            publicApp.style.display = 'block';
+            dashboardApp.style.display = 'none';
+          } else if (event === 'SIGNED_IN' && session) {
+            checkUserAndShowDashboard();
+          }
+        });
+      }
+    })();
+  </script>
 </body>
 </html>
