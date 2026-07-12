@@ -1,78 +1,117 @@
+
 // ============================================================
-// CLED – Aplicación principal
+// CLED – Aplicación principal (versión robusta)
 // ============================================================
 
-// --- Configuración Supabase (cambiar con tus credenciales) ---
-const SUPABASE_URL = 'https://XXXXXXX.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...';
+// --- Configuración Supabase (¡CAMBIA ESTO CON TUS DATOS!) ---
+const SUPABASE_URL = 'https://qbtwbzvdmpshcullonfp.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFidHdienZkbXBzaGN1bGxvbmZwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM4ODA3MTUsImV4cCI6MjA5OTQ1NjcxNX0._tbQQ1Tz7ML9HWTzVXH2-3LuyDcvHcK1-jrBxxWtqUU';
 
-// --- Inicialización ---
-const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+// --- Esperar a que la librería Supabase esté disponible ---
+function initSupabase(callback) {
+  if (typeof supabase !== 'undefined' && supabase.createClient) {
+    callback();
+  } else {
+    document.getElementById('app').innerHTML = '<p style="text-align:center;padding:2rem;">Cargando...</p>';
+    setTimeout(() => initSupabase(callback), 100);
+  }
+}
+
+// --- Inicializar cuando el DOM esté listo ---
+function ready(fn) {
+  if (document.readyState !== 'loading') {
+    fn();
+  } else {
+    document.addEventListener('DOMContentLoaded', fn);
+  }
+}
+
+// --- Inicio real ---
+ready(() => {
+  initSupabase(() => {
+    // Ahora sí podemos crear el cliente
+    window.supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    // Arrancar la app
+    main();
+  });
+});
 
 // --- Estado global ---
 let currentUser = null;
 let currentTheme = localStorage.getItem('theme') || 'light';
 
-// --- Referencias DOM ---
-const app = document.getElementById('app');
-
-// --- Función principal de renderizado ---
-function render() {
-  const hash = window.location.hash || '#home';
-  
+// --- Función principal ---
+function main() {
   // Aplicar tema
   document.documentElement.classList.toggle('dark', currentTheme === 'dark');
-  
-  // Verificar sesión
-  checkAuth().then(user => {
-    currentUser = user;
-    
-    if (hash === '#login' && user) {
-      window.location.hash = '#dashboard';
-      return;
-    }
-    
-    switch(hash) {
-      case '#home': renderPublicHome(); break;
-      case '#login': renderLogin(); break;
-      case '#dashboard': 
-        if (!user) { window.location.hash = '#login'; return; }
-        renderDashboard();
-        break;
-      default: renderPublicHome();
-    }
-  });
-}
-
-// --- Verificar sesión ---
-async function checkAuth() {
-  const { data: { user } } = await supabase.auth.getUser();
-  if (user) {
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('*')
-      .eq('id', user.id)
-      .single();
-    return { ...user, profile };
-  }
-  return null;
-}
-
-// --- Router ---
-window.addEventListener('hashchange', render);
-window.addEventListener('load', render);
-
-// --- Tema ---
-function toggleTheme() {
-  currentTheme = currentTheme === 'light' ? 'dark' : 'light';
-  localStorage.setItem('theme', currentTheme);
+  // Escuchar cambios de hash
+  window.addEventListener('hashchange', render);
+  // Render inicial
   render();
 }
 
-// --- Componentes UI ---
+// --- Obtener referencia al cliente Supabase ---
+const supabase = () => window.supabaseClient;
+
+// --- Renderizar según la ruta ---
+async function render() {
+  const hash = window.location.hash || '#home';
+  const app = document.getElementById('app');
+  if (!app) return;
+
+  // Verificar sesión
+  try {
+    const { data: { user } } = await supabase().auth.getUser();
+    if (user) {
+      const { data: profile } = await supabase()
+        .from('profiles')
+        .select('*')
+        .eq('id', user.id)
+        .single();
+      currentUser = { ...user, profile };
+    } else {
+      currentUser = null;
+    }
+  } catch (e) {
+    currentUser = null;
+  }
+
+  // Si ya está logueado y va a login, redirigir al dashboard
+  if (hash === '#login' && currentUser) {
+    window.location.hash = '#dashboard';
+    return;
+  }
+
+  // Proteger dashboard
+  if (hash === '#dashboard' && !currentUser) {
+    window.location.hash = '#login';
+    return;
+  }
+
+  // Renderizar la vista correspondiente
+  switch (hash) {
+    case '#login':
+      renderLogin();
+      break;
+    case '#dashboard':
+      renderDashboard();
+      break;
+    default:
+      renderPublicHome();
+  }
+}
+
+// --- Toggle tema ---
+function toggleTheme() {
+  currentTheme = currentTheme === 'light' ? 'dark' : 'light';
+  localStorage.setItem('theme', currentTheme);
+  document.documentElement.classList.toggle('dark', currentTheme === 'dark');
+}
+
+// --- Componente Logo ---
 function logoHTML() {
   return `
-    <div class="logo" onclick="window.location.hash='#home'">
+    <div class="logo" onclick="window.location.hash='#home'" style="cursor:pointer;">
       <svg width="32" height="32" viewBox="0 0 100 100" fill="none">
         <circle cx="50" cy="50" r="45" fill="#0A3D91"/>
         <path d="M30 70 L50 30 L70 70" stroke="#D4AF37" stroke-width="6" fill="none"/>
@@ -83,8 +122,7 @@ function logoHTML() {
 
 // --- Página pública ---
 function renderPublicHome() {
-  app.innerHTML = `
-    <!-- Navbar -->
+  document.getElementById('app').innerHTML = `
     <nav class="public-nav" id="publicNav">
       ${logoHTML()}
       <div class="nav-links">
@@ -98,8 +136,6 @@ function renderPublicHome() {
         <button class="btn btn-primary" onclick="window.location.hash='#login'">Campus CLED</button>
       </div>
     </nav>
-
-    <!-- Hero -->
     <section class="hero animate-fadeinup">
       <div>
         <h1 style="font-size:3rem;margin-bottom:1rem;">Club de Liderazgo<br>Estudiantil y Desarrollo</h1>
@@ -109,8 +145,6 @@ function renderPublicHome() {
         </button>
       </div>
     </section>
-
-    <!-- Valores -->
     <section style="padding:4rem 1.5rem;background:var(--bg-card);">
       <div class="container">
         <h2 style="text-align:center;margin-bottom:2rem;">Nuestra Esencia</h2>
@@ -121,15 +155,11 @@ function renderPublicHome() {
         </div>
       </div>
     </section>
-
-    <!-- CTA -->
     <section style="padding:4rem 1.5rem;background:var(--primary);color:white;text-align:center;">
       <h2>¿Listo para unirte?</h2>
       <button class="btn btn-gold" onclick="window.location.hash='#login'">Solicitar ingreso</button>
     </section>
   `;
-
-  // Navbar scroll effect
   window.addEventListener('scroll', () => {
     const nav = document.getElementById('publicNav');
     if (nav) nav.classList.toggle('nav-scrolled', window.scrollY > 50);
@@ -138,7 +168,7 @@ function renderPublicHome() {
 
 // --- Página Login ---
 function renderLogin() {
-  app.innerHTML = `
+  document.getElementById('app').innerHTML = `
     <div class="login-container">
       <div class="login-left">
         <div style="text-align:center;">
@@ -161,18 +191,17 @@ function renderLogin() {
             <button type="submit" class="btn btn-primary" style="width:100%;">Ingresar</button>
           </form>
           <p style="margin-top:1rem;text-align:center;">
-            <a href="#" onclick="sendMagicLink()">Acceder con enlace mágico</a>
+            <a href="#" onclick="event.preventDefault();sendMagicLink()">Acceder con enlace mágico</a>
           </p>
         </div>
       </div>
     </div>
   `;
-
   document.getElementById('loginForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    const { error } = await supabase().auth.signInWithPassword({ email, password });
     if (error) alert(error.message);
     else window.location.hash = '#dashboard';
   });
@@ -181,7 +210,7 @@ function renderLogin() {
 async function sendMagicLink() {
   const email = prompt('Ingresa tu correo para recibir el enlace mágico:');
   if (email) {
-    const { error } = await supabase.auth.signInWithOtp({ email });
+    const { error } = await supabase().auth.signInWithOtp({ email });
     if (error) alert(error.message);
     else alert('Revisa tu correo.');
   }
@@ -189,7 +218,7 @@ async function sendMagicLink() {
 
 // --- Dashboard ---
 function renderDashboard() {
-  app.innerHTML = `
+  document.getElementById('app').innerHTML = `
     <div class="dashboard-layout">
       <aside class="sidebar" id="sidebar">
         ${logoHTML()}
@@ -214,7 +243,7 @@ function renderDashboard() {
           <div class="card"><h3>Promedio</h3><p>92.5</p></div>
           <div class="card"><h3>Equipo</h3><p>Equipo Alpha</p></div>
         </div>
-        <div class="card" style="margin-bottom:1rem;">
+        <div class="card">
           <h3>Actividad Reciente</h3>
           <div id="activityFeed">Cargando...</div>
         </div>
@@ -225,14 +254,20 @@ function renderDashboard() {
 }
 
 async function loadActivity() {
-  const { data } = await supabase.from('activity_logs').select('*').order('created_at', { ascending: false }).limit(5);
+  const { data } = await supabase()
+    .from('activity_logs')
+    .select('*')
+    .order('created_at', { ascending: false })
+    .limit(5);
   const feed = document.getElementById('activityFeed');
   if (feed && data) {
-    feed.innerHTML = data.map(log => `<p>• ${log.action} - ${new Date(log.created_at).toLocaleString()}</p>`).join('');
+    feed.innerHTML = data.map(log => 
+      `<p>• ${log.action} - ${new Date(log.created_at).toLocaleString()}</p>`
+    ).join('');
   }
 }
 
 async function signOut() {
-  await supabase.auth.signOut();
+  await supabase().auth.signOut();
   window.location.hash = '#home';
 }
