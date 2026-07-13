@@ -171,6 +171,7 @@
     <div class="modal-overlay" id="registroModal"><div class="modal-content" id="registroModalContent"></div></div>
 
     <script>
+        // ==================== MENÚ HAMBURGUESA ====================
         (function() {
             const menuBtn = document.getElementById('menuBtn');
             const menuOverlay = document.getElementById('menuOverlay');
@@ -182,6 +183,10 @@
             });
         })();
 
+        // ==================== DATOS DEL PORTAL ====================
+        // Para agregar un nuevo elemento, copia un bloque y edita los valores.
+
+        // Estadísticas (1 objeto por tarjeta)
         const statsData = [
             { n: 520, l: 'Miembros activos' },
             { n: 7, l: 'Clubes' },
@@ -192,16 +197,62 @@
             { n: 280, l: 'Certificados' }
         ];
 
-        const clubsData = [
-            { id: '1', nombre: 'Comunicación Social y Periodismo', descripcion: 'Espacio dedicado al desarrollo de habilidades comunicacionales, periodísticas y de producción audiovisual.', emoji: '📰', facilitador: 'Prof. Robelin Mejías', foto: 'ROBELINMEJIAS.jpeg' },
-            { id: '2', nombre: 'Debate', descripcion: 'Club de argumentación, oratoria y pensamiento crítico donde se aprende a debatir con respeto y fundamentos.', emoji: '🎤', facilitador: 'Profa. Ana Patricia Sánchez', foto: 'https://placehold.co/100?text=AS' },
-            { id: '3', nombre: 'Lectura', descripcion: 'Fomento de la lectura crítica y el análisis literario a través de tertulias y talleres.', emoji: '📚', facilitador: 'Prof. Luis Manuel Vargas', foto: 'https://placehold.co/100?text=LV' },
-            { id: '4', nombre: 'Arte', descripcion: 'Exploración de las artes plásticas, dibujo, pintura y expresión creativa.', emoji: '🎨', facilitador: 'Lic. Carmen Rosa Jiménez', foto: 'https://placehold.co/100?text=CJ' },
-            { id: '5', nombre: 'Baile', descripcion: 'Danza contemporánea, folclore, ritmos latinos y expresión corporal.', emoji: '💃', facilitador: 'Prof. Pedro Antonio Santos', foto: 'https://placehold.co/100?text=PS' },
-            { id: '6', nombre: 'Orientación y Vocación Universitaria', descripcion: 'Guía para descubrir intereses profesionales y planificar el futuro académico.', emoji: '🎓', facilitador: 'Dra. Laura Mercedes Fernández', foto: 'https://placehold.co/100?text=LF' },
-            { id: '7', nombre: 'Voluntariado y Acción Social', descripcion: 'Proyectos solidarios y servicio a la comunidad para generar impacto social positivo.', emoji: '🤝', facilitador: 'Lic. José Miguel Herrera', foto: 'https://placehold.co/100?text=JH' }
+        // Facilitadores (staff) – ejemplo de cómo se verían, no se muestran en esta página
+        const staffData = [
+            { nombre: 'Prof. Robelin Mejías', rol: 'Facilitador Comunicación', foto: 'ROBELINMEJIAS.jpeg' },
+            { nombre: 'Profa. Ana Patricia Sánchez', rol: 'Facilitador Debate', foto: 'https://placehold.co/100?text=AS' },
+            { nombre: 'Prof. Luis Manuel Vargas', rol: 'Facilitador Lectura', foto: 'https://placehold.co/100?text=LV' },
+            // Copia y pega este bloque para agregar otro facilitador
         ];
 
+        // Clubes (sin fotos de facilitadores)
+        const clubsData = [
+            {
+                id: '1',
+                nombre: 'Comunicación Social y Periodismo',
+                descripcion: 'Espacio dedicado al desarrollo de habilidades comunicacionales, periodísticas y de producción audiovisual.',
+                emoji: '📰'
+            },
+            {
+                id: '2',
+                nombre: 'Debate',
+                descripcion: 'Club de argumentación, oratoria y pensamiento crítico donde se aprende a debatir con respeto y fundamentos.',
+                emoji: '🎤'
+            },
+            {
+                id: '3',
+                nombre: 'Lectura',
+                descripcion: 'Fomento de la lectura crítica y el análisis literario a través de tertulias y talleres.',
+                emoji: '📚'
+            },
+            {
+                id: '4',
+                nombre: 'Arte',
+                descripcion: 'Exploración de las artes plásticas, dibujo, pintura y expresión creativa.',
+                emoji: '🎨'
+            },
+            {
+                id: '5',
+                nombre: 'Baile',
+                descripcion: 'Danza contemporánea, folclore, ritmos latinos y expresión corporal.',
+                emoji: '💃'
+            },
+            {
+                id: '6',
+                nombre: 'Orientación y Vocación Universitaria',
+                descripcion: 'Guía para descubrir intereses profesionales y planificar el futuro académico.',
+                emoji: '🎓'
+            },
+            {
+                id: '7',
+                nombre: 'Voluntariado y Acción Social',
+                descripcion: 'Proyectos solidarios y servicio a la comunidad para generar impacto social positivo.',
+                emoji: '🤝'
+            }
+            // Copia y pega un bloque completo para añadir un nuevo club
+        ];
+
+        // Eventos
         const eventsData = [
             { id: '1', titulo: 'Feria de Clubes 2026', descripcion: 'Exhibición de todos los clubes del CLED.', fecha: '2026-09-15', hora: '09:00', lugar: 'Patio Central', estado: 'abierto', cupos: 200, emoji: '🎉' },
             { id: '2', titulo: 'Torneo de Debate Interescolar', descripcion: 'Competencia regional de debate.', fecha: '2026-10-20', hora: '10:00', lugar: 'Auditorio Principal', estado: 'abierto', cupos: 80, emoji: '🗣️' },
@@ -209,20 +260,26 @@
             { id: '4', titulo: 'Jornada de Voluntariado', descripcion: 'Limpieza de playas y reforestación.', fecha: '2026-12-01', hora: '08:00', lugar: 'Playa Guibia', estado: 'abierto', cupos: 100, emoji: '🌱' }
         ];
 
+        // Noticias
         const noticiasData = [
             { titulo: 'Inauguración del año escolar CLED 2026', contenido: 'Con gran entusiasmo iniciamos las actividades del Club de Liderazgo Estudiantil y Desarrollo...', fecha: '2026-08-20', imagen: 'https://placehold.co/400x150?text=Inauguración', club: 'General' },
             { titulo: 'Club de Debate gana primer lugar nacional', contenido: 'Nuestro equipo de debate se coronó campeón en el Torneo Nacional Interescolar...', fecha: '2026-07-10', imagen: 'https://placehold.co/400x150?text=Debate+Campeón', club: 'Debate' },
             { titulo: 'Nuevo taller de periodismo digital', contenido: 'El club de Comunicación Social abre inscripciones para el taller de redacción...', fecha: '2026-09-01', imagen: 'https://placehold.co/400x150?text=Taller+Periodismo', club: 'Comunicación' }
         ];
 
+        // Testimonios
         const testimoniosData = [
             { texto: 'Gracias al CLED descubrí mi pasión por el periodismo. Ahora soy locutor en una emisora local.', autor: 'Pedro Guzmán', rol: 'Estudiante', foto: 'https://placehold.co/80?text=PG' },
             { texto: 'Ver el crecimiento de los chicos en debate es increíble. El CLED transforma vidas.', autor: 'Ana Patricia Sánchez', rol: 'Facilitadora', foto: 'https://placehold.co/80?text=AS' },
             { texto: 'Los eventos del CLED son impecables. Organización de primer nivel.', autor: 'Lic. Ramón Emilio', rol: 'Invitado', foto: 'https://placehold.co/80?text=RE' }
         ];
 
+        // ==================== FUNCIONES DE RENDERIZADO ====================
+
         function renderStats() {
-            document.getElementById('statsContainer').innerHTML = statsData.map(s => `<div class="card" style="text-align:center;"><h3>${s.n}+</h3><p>${s.l}</p></div>`).join('');
+            document.getElementById('statsContainer').innerHTML = statsData.map(s => 
+                `<div class="card" style="text-align:center;"><h3>${s.n}+</h3><p>${s.l}</p></div>`
+            ).join('');
         }
 
         function renderClubes() {
@@ -235,6 +292,7 @@
                 </div>`).join('');
         }
 
+        // Función global para mostrar modal de club
         window.verClub = function(id) {
             const club = clubsData.find(c => c.id === id);
             if (!club) return;
@@ -245,11 +303,7 @@
                 <div style="text-align:center;font-size:4rem;">${club.emoji}</div>
                 <h2 style="margin-top:1rem; text-align:center;">${club.nombre}</h2>
                 <p style="text-align:center;">${club.descripcion}</p>
-                <div style="text-align:center; margin:1.5rem 0;">
-                    <img src="${club.foto}" width="60" style="border-radius:50%;">
-                    <p><strong>${club.facilitador}</strong></p>
-                </div>
-                <button class="btn btn-gold" style="display:block; margin:0 auto;" onclick="alert('Inscripción (próximamente)')">Inscribirme</button>`;
+                <button class="btn btn-gold" style="display:block; margin:1.5rem auto 0;" onclick="alert('Inscripción (próximamente)')">Inscribirme</button>`;
             modal.classList.add('open');
         };
 
@@ -264,6 +318,7 @@
                 </div>`).join('');
         }
 
+        // Modal de registro (sin cambios)
         window.abrirRegistro = function(eventoId) {
             const modal = document.getElementById('registroModal');
             const content = document.getElementById('registroModalContent');
@@ -378,6 +433,7 @@
                 </div>`).join('');
         }
 
+        // Buscador
         document.getElementById('globalSearch').addEventListener('input', function() {
             const q = this.value.trim().toLowerCase();
             const resultsDiv = document.getElementById('searchResults');
@@ -391,12 +447,14 @@
             resultsDiv.style.display = 'block';
         });
 
+        // Iniciar la interfaz
         renderStats();
         renderClubes();
         renderEventos();
         renderNoticias();
         renderTestimonios();
 
+        // Cerrar modales al hacer clic fuera del contenido
         document.querySelectorAll('.modal-overlay').forEach(modal => {
             modal.addEventListener('click', function(e) { if (e.target === modal) modal.classList.remove('open'); });
         });
