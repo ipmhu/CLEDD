@@ -425,8 +425,8 @@
                 ...datosExtras
             };
 
-            // Insertar en Supabase si está disponible
             let codigo = 'CLED-' + Math.random().toString(36).substr(2, 8).toUpperCase();
+
             if (supabase) {
                 const { data: registro, error: errorRegistro } = await supabase
                     .from('event_registrations')
@@ -448,7 +448,6 @@
                     return;
                 }
             } else {
-                // Sin BD, mostramos igual el pase (sin persistencia)
                 console.warn('Registro no guardado (Supabase no configurado)');
             }
 
@@ -462,7 +461,7 @@
             `;
         }
 
-        // ==================== DESCARGA PDF CON ESPERA DE IMAGEN ====================
+        // ==================== DESCARGA PDF (CORREGIDO) ====================
         window.descargarPDF = function(nombre, codigo) {
             const qrImg = document.getElementById('qrImage');
             if (!qrImg) {
@@ -486,11 +485,10 @@
                         document.getElementById('printQr').onload = function() {
                             window.print();
                         };
-                        // Fallback por si la imagen ya está en caché
                         if (document.getElementById('printQr').complete) {
                             window.print();
                         }
-                    </script>
+                    <\/script>
                 </body>
                 </html>
             `);
