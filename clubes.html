@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="CLED – Clubes">
+    <meta name="description" content="CLED – Eventos">
     <meta name="theme-color" content="#0A3D91">
     <link rel="icon" type="image/png" href="LOGO_CLED_SF.png">
-    <title>CLED – Clubes</title>
+    <title>CLED – Eventos</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -162,8 +162,8 @@
 
         .grid-3 { display:grid; grid-template-columns: repeat(auto-fit, minmax(260px,1fr)); gap:2rem; }
 
-        .club-emoji { font-size:3.5rem; margin-bottom:0.75rem; transition: transform 0.3s; }
-        .card:hover .club-emoji { transform: scale(1.1); }
+        .event-emoji { font-size:3.5rem; margin-bottom:0.75rem; transition: transform 0.3s; }
+        .card:hover .event-emoji { transform: scale(1.1); }
 
         /* ============ MODAL ============ */
         .modal-overlay {
@@ -186,10 +186,15 @@
         }
         .modal-close:hover { transform: rotate(90deg); }
 
-        .facilitador-foto {
-            width:120px; height:120px; border-radius:50%; object-fit:cover;
-            border: 3px solid var(--primary); margin:0.5rem 0;
+        /* ============ FORMULARIOS ============ */
+        .form-group { margin-bottom:1.4rem; }
+        .form-group label { display:block; margin-bottom:0.5rem; font-weight:600; color:var(--text); }
+        .form-group input, .form-group select {
+            width:100%; padding:0.8rem 1.2rem; border:2px solid var(--border);
+            border-radius:12px; background:var(--bg); color:var(--text);
+            font-family:inherit; font-size:1rem; transition: border 0.2s;
         }
+        .form-group input:focus, .form-group select:focus { outline:none; border-color:var(--primary); }
 
         @media (max-width:768px) {
             .menu-overlay { width: 280px; }
@@ -236,13 +241,13 @@
 
     <section class="hero">
         <div class="container" style="padding-top:4rem;">
-            <h1>Clubes</h1>
+            <h1>Eventos</h1>
         </div>
     </section>
 
     <section class="section">
         <div class="container">
-            <div class="grid-3" id="clubesContainer"></div>
+            <div class="grid-3" id="eventosContainer"></div>
         </div>
     </section>
 
@@ -253,9 +258,9 @@
         </div>
     </footer>
 
-    <!-- Modal para detalles del club -->
-    <div class="modal-overlay" id="clubModal">
-        <div class="modal-content" id="clubModalContent"></div>
+    <!-- Modal de registro -->
+    <div class="modal-overlay" id="registroModal">
+        <div class="modal-content" id="registroModalContent"></div>
     </div>
 
     <script>
@@ -285,115 +290,153 @@
         menuBackdrop.addEventListener('click', closeMenu);
         document.querySelectorAll('.menu-overlay a').forEach(link => link.addEventListener('click', closeMenu));
 
-        // ==================== DATOS DE CLUBES ====================
-        const clubsData = [
+        // ==================== DATOS DE EVENTOS ====================
+        // Para agregar un evento, copia un bloque {} y edita los valores
+        const eventsData = [
             {
                 id: '1',
-                nombre: 'Comunicación Social y Periodismo',
-                descripcion: 'Espacio dedicado al desarrollo de habilidades comunicacionales, periodísticas y de producción audiovisual.',
-                emoji: '📰',
-                facilitador: {
-                    nombre: 'Prof. Robelin Mejías',
-                    foto: 'ROBELINMEJIAS.jpeg'
-                }
+                titulo: 'Feria de Clubes 2026',
+                fecha: '2026-09-15',
+                hora: '09:00',
+                lugar: 'Patio Central',
+                estado: 'abierto',
+                emoji: '🎉'
             },
             {
                 id: '2',
-                nombre: 'Debate',
-                descripcion: 'Club de argumentación, oratoria y pensamiento crítico donde se aprende a debatir con respeto y fundamentos.',
-                emoji: '🎤',
-                facilitador: {
-                    nombre: 'Profa. Ana Patricia Sánchez',
-                    foto: 'https://placehold.co/100?text=AS'
-                }
+                titulo: 'Torneo de Debate Interescolar',
+                fecha: '2026-10-20',
+                hora: '10:00',
+                lugar: 'Auditorio Principal',
+                estado: 'abierto',
+                emoji: '🗣️'
             },
             {
                 id: '3',
-                nombre: 'Lectura',
-                descripcion: 'Fomento de la lectura crítica y el análisis literario a través de tertulias y talleres.',
-                emoji: '📚',
-                facilitador: {
-                    nombre: 'Prof. Luis Manuel Vargas',
-                    foto: 'https://placehold.co/100?text=LV'
-                }
+                titulo: 'Taller de Liderazgo Juvenil',
+                fecha: '2026-11-05',
+                hora: '14:00',
+                lugar: 'Salón 201',
+                estado: 'cerrado',
+                emoji: '🌟'
             },
             {
                 id: '4',
-                nombre: 'Arte',
-                descripcion: 'Exploración de las artes plásticas, dibujo, pintura y expresión creativa.',
-                emoji: '🎨',
-                facilitador: {
-                    nombre: 'Lic. Carmen Rosa Jiménez',
-                    foto: 'https://placehold.co/100?text=CJ'
-                }
-            },
-            {
-                id: '5',
-                nombre: 'Baile',
-                descripcion: 'Danza contemporánea, folclore, ritmos latinos y expresión corporal.',
-                emoji: '💃',
-                facilitador: {
-                    nombre: 'Prof. Pedro Antonio Santos',
-                    foto: 'https://placehold.co/100?text=PS'
-                }
-            },
-            {
-                id: '6',
-                nombre: 'Orientación y Vocación Universitaria',
-                descripcion: 'Guía para descubrir intereses profesionales y planificar el futuro académico.',
-                emoji: '🎓',
-                facilitador: {
-                    nombre: 'Dra. Laura Mercedes Fernández',
-                    foto: 'https://placehold.co/100?text=LF'
-                }
-            },
-            {
-                id: '7',
-                nombre: 'Voluntariado y Acción Social',
-                descripcion: 'Proyectos solidarios y servicio a la comunidad para generar impacto social positivo.',
-                emoji: '🤝',
-                facilitador: {
-                    nombre: 'Lic. José Miguel Herrera',
-                    foto: 'https://placehold.co/100?text=JH'
-                }
+                titulo: 'Jornada de Voluntariado',
+                fecha: '2026-12-01',
+                hora: '08:00',
+                lugar: 'Playa Guibia',
+                estado: 'abierto',
+                emoji: '🌱'
             }
         ];
 
-        // ==================== RENDERIZAR CLUBES ====================
-        function renderClubes() {
-            const container = document.getElementById('clubesContainer');
-            container.innerHTML = clubsData.map(club => `
+        // ==================== RENDERIZAR EVENTOS ====================
+        function renderEventos() {
+            const container = document.getElementById('eventosContainer');
+            container.innerHTML = eventsData.map(e => `
                 <div class="card">
-                    <div class="club-emoji">${club.emoji}</div>
-                    <h3>${club.nombre}</h3>
-                    <p style="color:var(--text-secondary); margin-bottom:1.5rem;">${club.descripcion}</p>
-                    <button class="btn btn-outline" onclick="verClub('${club.id}')">Ver club</button>
+                    <div class="event-emoji">${e.emoji}</div>
+                    <h3>${e.titulo}</h3>
+                    <p>📅 ${e.fecha} | ⏰ ${e.hora} | 📍 ${e.lugar}</p>
+                    <p>${e.estado === 'abierto' ? '✅ Registro abierto' : '🔒 Cerrado'}</p>
+                    <button class="btn btn-gold" ${e.estado !== 'abierto' ? 'disabled' : ''} onclick="abrirRegistro('${e.id}')">Registrarme</button>
                 </div>
             `).join('');
         }
 
-        // ==================== MODAL DEL CLUB ====================
-        window.verClub = function(id) {
-            const club = clubsData.find(c => c.id === id);
-            if (!club) return;
-
-            const modal = document.getElementById('clubModal');
-            const content = document.getElementById('clubModalContent');
+        // ==================== MODAL DE REGISTRO ====================
+        window.abrirRegistro = function(eventoId) {
+            const modal = document.getElementById('registroModal');
+            const content = document.getElementById('registroModalContent');
             content.innerHTML = `
-                <button class="modal-close" onclick="document.getElementById('clubModal').classList.remove('open')">&times;</button>
-                <div style="text-align:center;">
-                    <div style="font-size:5rem;">${club.emoji}</div>
-                    <h2 style="margin-top:1rem;">${club.nombre}</h2>
-                    <p style="color:var(--text-secondary);">${club.descripcion}</p>
-                </div>
-                <div style="text-align:center; margin:2rem 0;">
-                    <img src="${club.facilitador.foto}" alt="${club.facilitador.nombre}" class="facilitador-foto">
-                    <p><strong>${club.facilitador.nombre}</strong></p>
-                    <p style="color:var(--text-secondary);">Facilitador</p>
-                </div>
-                <button class="btn btn-gold" style="display:block; margin:0 auto;" onclick="alert('¡Próximamente podrás inscribirte!')">Inscribirme</button>
+                <button class="modal-close" onclick="document.getElementById('registroModal').classList.remove('open')">&times;</button>
+                <h2>Registro al Evento</h2>
+                <form id="formRegistro" data-evento="${eventoId}">
+                    <div class="form-group">
+                        <label>Rol</label>
+                        <select id="rol"><option value="">Seleccione</option><option value="Estudiante">Estudiante</option><option value="Docente">Docente</option><option value="Gestion">Equipo de Gestión</option></select>
+                    </div>
+                    <div id="camposDinamicos"></div>
+                    <button type="submit" class="btn btn-primary" style="width:100%;">Registrarme</button>
+                </form>
+                <div id="paseDigital" style="margin-top:1rem; text-align:center;"></div>
             `;
+            document.getElementById('rol').addEventListener('change', actualizarCampos);
+            document.getElementById('formRegistro').addEventListener('submit', registrarEvento);
             modal.classList.add('open');
+        };
+
+        function actualizarCampos() {
+            const rol = document.getElementById('rol').value;
+            let html = '';
+            if (rol === 'Estudiante') {
+                html = `
+                    <div class="form-group"><input placeholder="Nombre(s)" id="nombre" required></div>
+                    <div class="form-group"><input placeholder="Apellido(s)" id="apellido" required></div>
+                    <div class="form-group"><label>Grado</label><select id="grado"><option value="">-</option><option>3ro</option><option>4to</option><option>5to</option><option>6to</option></select></div>
+                    <div class="form-group"><label>Sección</label><select id="seccion"><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option></select></div>
+                    <div class="form-group" id="moduloGroup" style="display:none;"><label>Módulo</label><select id="modulo"><option>Informática</option><option>Gestión</option><option>Logística</option><option>Refrigeración</option><option>Electrónica</option><option>Electricidad</option></select></div>
+                    <div class="form-group"><input type="email" placeholder="Correo electrónico" id="email" required></div>`;
+            } else if (rol === 'Docente') {
+                html = `
+                    <div class="form-group"><input placeholder="Nombre(s)" id="nombre" required></div>
+                    <div class="form-group"><input placeholder="Apellido(s)" id="apellido" required></div>
+                    <div class="form-group"><label>Modalidad</label><select id="modalidad"><option value="">-</option><option>Académica</option><option>Técnica</option></select></div>
+                    <div class="form-group" id="areaGroup" style="display:none;"><label>Área</label><select id="area"><option>Lengua Española</option><option>Matemáticas</option><option>Sociales</option><option>Naturales</option><option>Educación Física</option><option>Educación Artística</option><option>Formación Integral Humana</option><option>Inglés</option><option>Francés</option><option>Moral y Cívica</option></select></div>
+                    <div class="form-group" id="tecnicoGroup" style="display:none;"><label>Técnico</label><select id="tecnico"><option>Informática</option><option>Gestión</option><option>Logística</option><option>Refrigeración</option><option>Electrónica</option><option>Electricidad</option></select></div>
+                    <div class="form-group"><input type="email" placeholder="Correo electrónico" id="email" required></div>`;
+            } else if (rol === 'Gestion') {
+                html = `
+                    <div class="form-group"><input placeholder="Nombre(s)" id="nombre" required></div>
+                    <div class="form-group"><input placeholder="Apellido(s)" id="apellido" required></div>
+                    <div class="form-group"><label>Rol</label><select id="rolGestion"><option>Director</option><option>Sub-Director</option><option>Orientadora</option><option>Coordinador/a</option><option>Secretaria</option><option>Dinamizador TIC</option></select></div>
+                    <div class="form-group"><input type="email" placeholder="Correo electrónico" id="email" required></div>`;
+            }
+            document.getElementById('camposDinamicos').innerHTML = html;
+            if (rol === 'Estudiante') {
+                const grado = document.getElementById('grado');
+                const moduloGroup = document.getElementById('moduloGroup');
+                const seccion = document.getElementById('seccion');
+                grado.addEventListener('change', () => {
+                    moduloGroup.style.display = (grado.value && grado.value !== '3ro') ? 'block' : 'none';
+                    seccion.innerHTML = (grado.value === '3ro') ?
+                        ['A','B','C','D','E'].map(v => `<option>${v}</option>`).join('') :
+                        ['A','B'].map(v => `<option>${v}</option>`).join('');
+                });
+            } else if (rol === 'Docente') {
+                document.getElementById('modalidad').addEventListener('change', function() {
+                    document.getElementById('areaGroup').style.display = this.value === 'Académica' ? 'block' : 'none';
+                    document.getElementById('tecnicoGroup').style.display = this.value === 'Técnica' ? 'block' : 'none';
+                });
+            }
+        }
+
+        function registrarEvento(e) {
+            e.preventDefault();
+            const nombre = document.getElementById('nombre').value;
+            const apellido = document.getElementById('apellido').value;
+            const codigo = 'CLED-' + Math.random().toString(36).substr(2, 8).toUpperCase();
+            const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${codigo}`;
+            document.getElementById('paseDigital').innerHTML = `
+                <h3>✅ Registro exitoso</h3>
+                <p><strong>Código:</strong> ${codigo}</p>
+                <img src="${qrUrl}" alt="QR">
+                <p style="color:red;">📸 Captura este código.</p>
+                <button class="btn btn-primary" onclick="descargarPDF('${nombre} ${apellido}', '${codigo}')">Descargar PDF</button>`;
+        }
+
+        window.descargarPDF = function(nombre, codigo) {
+            const qrImg = document.querySelector('#paseDigital img').src;
+            const win = window.open('', '_blank');
+            win.document.write(`
+                <html><head><title>Pase de Evento</title></head><body style="text-align:center;font-family:sans-serif;">
+                    <img src="LOGO_CLED.png" width="80"><h1>CLED</h1>
+                    <h2>Pase de Evento</h2><p>${nombre}</p>
+                    <img src="${qrImg}"><p>Código: ${codigo}</p>
+                </body></html>`);
+            win.document.close();
+            win.print();
         };
 
         // Cerrar modal al hacer clic fuera
@@ -401,8 +444,8 @@
             modal.addEventListener('click', function(e) { if (e.target === modal) modal.classList.remove('open'); });
         });
 
-        // Renderizar al cargar
-        renderClubes();
+        // Renderizar eventos al cargar
+        renderEventos();
     </script>
 </body>
 </html>
