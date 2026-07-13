@@ -101,19 +101,32 @@
         }
         .theme-toggle:hover { background:var(--border); }
 
-        /* ============ MENÚ OVERLAY ============ */
-        .menu-overlay {
-            position:fixed; inset:0; background:rgba(10,61,145,0.97); z-index:200;
-            display:flex; align-items:center; justify-content:center;
-            opacity:0; pointer-events:none; transition: opacity 0.35s ease;
+        /* ============ MENÚ LATERAL DERECHO ============ */
+        .menu-backdrop {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.35);
+            z-index: 199; opacity: 0; pointer-events: none;
+            transition: opacity 0.3s ease;
         }
-        .menu-overlay.open { opacity:1; pointer-events:auto; }
+        .menu-backdrop.open {
+            opacity: 1; pointer-events: auto;
+        }
+
+        .menu-overlay {
+            position: fixed; top: 0; right: 0; bottom: 0; z-index: 200;
+            width: 320px; max-width: 80vw;
+            background: rgba(10,61,145,0.97);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            transform: translateX(100%);
+            transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 2rem 1.5rem;
+        }
+        .menu-overlay.open {
+            transform: translateX(0);
+        }
 
         .menu-container {
-            width: 90%;
-            max-width: 400px;
+            width: 100%;
             text-align: center;
-            padding: 2rem 1rem;
         }
 
         .menu-overlay nav {
@@ -121,19 +134,25 @@
         }
 
         .menu-overlay a {
-            color: white; font-size: 1.4rem;
+            color: white; font-size: 1.3rem;
             font-weight: 700; font-family: 'Montserrat', sans-serif;
             transition: color 0.2s, transform 0.2s;
             padding: 0.5rem 0;
+            text-decoration: none;
         }
-        .menu-overlay a:hover { color: var(--gold); transform: scale(1.05); }
+        .menu-overlay a:hover {
+            color: var(--gold);
+            transform: scale(1.05);
+        }
 
         .menu-close {
-            position: absolute; top: 1.5rem; right: 2rem;
-            background: none; border: none; font-size: 2.5rem; color: white;
+            position: absolute; top: 1rem; right: 1.5rem;
+            background: none; border: none; font-size: 2rem; color: white;
             cursor: pointer; transition: transform 0.3s;
         }
-        .menu-close:hover { transform: rotate(90deg); }
+        .menu-close:hover {
+            transform: rotate(90deg);
+        }
 
         /* ============ HERO ============ */
         .hero {
@@ -234,7 +253,7 @@
         }
 
         @media (max-width:768px) {
-            .menu-container { max-width: 320px; }
+            .menu-overlay { width: 280px; }
             .menu-overlay a { font-size: 1.2rem; }
             .logo img { height:44px; }
             .logo span { font-size:1.4rem; }
@@ -245,7 +264,7 @@
     <header class="main-header">
         <div class="header-inner">
             <div class="logo">
-                <img src="LOGO_CLED_SF.png" alt="CLED Logo">
+                <img src="LOGO_CLED.png" alt="CLED Logo">
                 <span>CLED</span>
             </div>
             <div style="display:flex; align-items:center; gap:1rem;">
@@ -256,6 +275,10 @@
         </div>
     </header>
 
+    <!-- Fondo oscuro detrás del menú -->
+    <div class="menu-backdrop" id="menuBackdrop"></div>
+
+    <!-- Menú lateral derecho -->
     <div class="menu-overlay" id="menuOverlay">
         <button class="menu-close" id="menuClose">&times;</button>
         <div class="menu-container">
@@ -329,7 +352,7 @@
     <footer class="footer">
         <div class="container footer-grid">
             <div>
-                <img src="LOGO_CLED_SF.png" height="48" alt="CLED">
+                <img src="LOGO_CLED.png" height="48" alt="CLED">
                 <p style="margin-top:0.5rem;">Formando líderes desde 2020.</p>
             </div>
             <div>
@@ -368,14 +391,29 @@
             localStorage.setItem('theme', newTheme);
         });
 
-        // ==================== MENÚ ====================
+        // ==================== MENÚ LATERAL ====================
         const menuBtn = document.getElementById('menuBtn');
         const menuOverlay = document.getElementById('menuOverlay');
         const menuClose = document.getElementById('menuClose');
-        menuBtn.addEventListener('click', () => menuOverlay.classList.add('open'));
-        menuClose.addEventListener('click', () => menuOverlay.classList.remove('open'));
+        const menuBackdrop = document.getElementById('menuBackdrop');
+
+        function openMenu() {
+            menuOverlay.classList.add('open');
+            menuBackdrop.classList.add('open');
+        }
+
+        function closeMenu() {
+            menuOverlay.classList.remove('open');
+            menuBackdrop.classList.remove('open');
+        }
+
+        menuBtn.addEventListener('click', openMenu);
+        menuClose.addEventListener('click', closeMenu);
+        menuBackdrop.addEventListener('click', closeMenu);
+
+        // Cerrar al hacer clic en cualquier enlace del menú
         document.querySelectorAll('.menu-overlay a').forEach(link => {
-            link.addEventListener('click', () => menuOverlay.classList.remove('open'));
+            link.addEventListener('click', closeMenu);
         });
 
         // ==================== DATOS ====================
@@ -542,7 +580,7 @@
             const win = window.open('', '_blank');
             win.document.write(`
                 <html><head><title>Pase de Evento</title></head><body style="text-align:center;font-family:sans-serif;">
-                    <img src="LOGO_CLED_SF.png" width="80"><h1>CLED</h1>
+                    <img src="LOGO_CLED.png" width="80"><h1>CLED</h1>
                     <h2>Pase de Evento</h2><p>${nombre}</p>
                     <img src="${qrImg}"><p>Código: ${codigo}</p>
                 </body></html>`);
