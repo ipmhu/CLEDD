@@ -291,7 +291,6 @@
         document.querySelectorAll('.menu-overlay a').forEach(link => link.addEventListener('click', closeMenu));
 
         // ==================== DATOS DE EVENTOS ====================
-        // Para agregar un evento, copia un bloque {} y edita los valores
         const eventsData = [
             {
                 id: '1',
@@ -426,17 +425,36 @@
                 <button class="btn btn-primary" onclick="descargarPDF('${nombre} ${apellido}', '${codigo}')">Descargar PDF</button>`;
         }
 
+        // ==================== DESCARGA DE PDF (con corrección de impresión) ====================
         window.descargarPDF = function(nombre, codigo) {
-            const qrImg = document.querySelector('#paseDigital img').src;
+            const qrImg = document.querySelector('#paseDigital img');
+            if (!qrImg) {
+                alert('Error: no se encontró la imagen del código QR.');
+                return;
+            }
+            const qrSrc = qrImg.src;
             const win = window.open('', '_blank');
             win.document.write(`
-                <html><head><title>Pase de Evento</title></head><body style="text-align:center;font-family:sans-serif;">
-                    <img src="LOGO_CLED.png" width="80"><h1>CLED</h1>
-                    <h2>Pase de Evento</h2><p>${nombre}</p>
-                    <img src="${qrImg}"><p>Código: ${codigo}</p>
-                </body></html>`);
+                <html>
+                <head><title>Pase de Evento</title></head>
+                <body style="text-align:center; font-family:sans-serif; margin:2rem;">
+                    <img src="LOGO_CLED.png" width="80" alt="CLED">
+                    <h1>CLED</h1>
+                    <h2>Pase de Evento</h2>
+                    <p><strong>Participante:</strong> ${nombre}</p>
+                    <img src="${qrSrc}" alt="Código QR" style="margin:1rem 0;">
+                    <p><strong>Código:</strong> ${codigo}</p>
+                    <p style="color:gray; font-size:0.9rem;">Presenta este código en la entrada del evento.</p>
+                    <script>
+                        // Esperar a que las imágenes se carguen antes de imprimir
+                        setTimeout(function() {
+                            window.print();
+                        }, 600);
+                    </script>
+                </body>
+                </html>
+            `);
             win.document.close();
-            win.print();
         };
 
         // Cerrar modal al hacer clic fuera
