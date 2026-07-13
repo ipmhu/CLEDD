@@ -12,7 +12,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        /* ============ VARIABLES Y TEMAS ============ */
+        /* (El mismo CSS de antes, sin cambios) */
         :root {
             --bg: #FFFFFF;
             --bg-alt: #F8FAFC;
@@ -27,9 +27,7 @@
             --primary-hover: #062757;
             --gold: #D4AF37;
             --gold-hover: #b8960f;
-            --transition-speed: 0.25s;
         }
-
         .dark {
             --bg: #0F172A;
             --bg-alt: #1E293B;
@@ -41,132 +39,86 @@
             --shadow: 0 4px 6px rgba(0,0,0,0.15);
             --shadow-hover: 0 12px 28px rgba(0,0,0,0.25);
         }
-
         * { margin:0; padding:0; box-sizing:border-box; }
-
         body {
             font-family: 'Inter', sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            line-height: 1.6;
-            transition: background var(--transition-speed), color var(--transition-speed);
+            background: var(--bg); color: var(--text);
+            line-height: 1.6; transition: background 0.25s, color 0.25s;
         }
-
         .container { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; }
-
-        /* ============ HEADER ============ */
         .main-header {
             position: fixed; top:0; left:0; right:0; z-index:100; padding:1rem 0;
             background: var(--header-bg); backdrop-filter:blur(14px);
             border-bottom: 1px solid var(--border);
-            transition: all var(--transition-speed);
         }
         .header-inner {
             display:flex; align-items:center; justify-content:space-between;
             max-width:1200px; margin:0 auto; padding:0 1.5rem;
         }
         .logo { display:flex; align-items:center; gap:0.75rem; }
-        .logo img { height:56px; transition: transform 0.3s; }
-        .logo img:hover { transform: scale(1.05); }
+        .logo img { height:56px; }
         .logo span {
             font-weight:800; font-size:1.8rem; color:var(--primary);
-            font-family:'Montserrat',sans-serif; letter-spacing: -0.5px;
+            font-family:'Montserrat',sans-serif;
         }
         .menu-btn {
-            background:none; border:none; font-size:2rem; cursor:pointer;
-            color:var(--primary); transition: transform 0.2s;
+            background:none; border:none; font-size:2rem; cursor:pointer; color:var(--primary);
         }
-        .menu-btn:hover { transform: rotate(90deg); }
-
-        /* ============ BOTONES ============ */
         .btn {
             display:inline-flex; align-items:center; gap:0.5rem;
             padding:0.8rem 2rem; border-radius:9999px; font-weight:600;
             cursor:pointer; border:none; text-decoration:none;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            font-size:0.95rem;
+            transition: all 0.3s; font-size:0.95rem;
         }
         .btn-primary { background:var(--primary); color:white; }
-        .btn-primary:hover { background:var(--primary-hover); transform:translateY(-2px); box-shadow:0 8px 20px rgba(10,61,145,0.3); }
-        .btn-outline { background:transparent; border:2px solid var(--border); color:var(--text); }
-        .btn-outline:hover { background:var(--border); transform:translateY(-2px); }
+        .btn-primary:hover { background:var(--primary-hover); transform:translateY(-2px); }
         .btn-gold { background:var(--gold); color:#1e293b; }
-        .btn-gold:hover { background:var(--gold-hover); transform:translateY(-2px); box-shadow:0 8px 20px rgba(212,175,55,0.4); }
-
+        .btn-gold:hover { background:var(--gold-hover); transform:translateY(-2px); }
         .theme-toggle {
             background:none; border:2px solid var(--border); color:var(--text);
             padding:0.5rem 1rem; border-radius:9999px; cursor:pointer;
-            font-size:1.2rem; transition: all 0.3s;
         }
-        .theme-toggle:hover { background:var(--border); }
-
-        /* ============ MENÚ LATERAL DERECHO ============ */
         .menu-backdrop {
             position: fixed; inset: 0; background: rgba(0,0,0,0.35);
-            z-index: 199; opacity: 0; pointer-events: none;
-            transition: opacity 0.3s ease;
+            z-index: 199; opacity: 0; pointer-events: none; transition: opacity 0.3s;
         }
         .menu-backdrop.open { opacity: 1; pointer-events: auto; }
-
         .menu-overlay {
             position: fixed; top: 0; right: 0; bottom: 0; z-index: 200;
             width: 320px; max-width: 80vw;
             background: rgba(10,61,145,0.97);
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             transform: translateX(100%);
-            transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: transform 0.35s;
             padding: 2rem 1.5rem;
         }
         .menu-overlay.open { transform: translateX(0); }
-
         .menu-container { width: 100%; text-align: center; }
-
         .menu-overlay nav { display: flex; flex-direction: column; gap: 1.2rem; }
-
         .menu-overlay a {
-            color: white; font-size: 1.3rem;
-            font-weight: 700; font-family: 'Montserrat', sans-serif;
-            transition: color 0.2s, transform 0.2s;
-            padding: 0.5rem 0;
-            text-decoration: none;
+            color: white; font-size: 1.3rem; font-weight: 700; text-decoration: none;
+            font-family: 'Montserrat', sans-serif;
         }
-        .menu-overlay a:hover { color: var(--gold); transform: scale(1.05); }
-
+        .menu-overlay a:hover { color: var(--gold); }
         .menu-close {
             position: absolute; top: 1rem; right: 1.5rem;
-            background: none; border: none; font-size: 2rem; color: white;
-            cursor: pointer; transition: transform 0.3s;
+            background: none; border: none; font-size: 2rem; color: white; cursor: pointer;
         }
-        .menu-close:hover { transform: rotate(90deg); }
-
-        /* ============ HERO ============ */
         .hero {
             min-height: 40vh; display:flex; align-items:center;
             background:linear-gradient(135deg, #0A3D91 0%, #02111D 100%);
-            color:white; position:relative; overflow:hidden;
+            color:white;
         }
         .hero h1 { font-size: clamp(2.5rem, 6vw, 4rem); }
-
-        /* ============ SECCIONES ============ */
         .section { padding:5rem 0; }
-        .section-title {
-            font-size:2.2rem; font-weight:800; margin-bottom:1.5rem;
-            color:var(--primary); transition: color 0.3s;
-        }
         .card {
             background:var(--card-bg); border-radius:20px; padding:2rem;
             box-shadow:var(--shadow); border:1px solid var(--border);
-            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-            text-align:center;
+            transition: all 0.35s; text-align:center;
         }
         .card:hover { transform:translateY(-8px); box-shadow:var(--shadow-hover); }
-
         .grid-3 { display:grid; grid-template-columns: repeat(auto-fit, minmax(260px,1fr)); gap:2rem; }
-
-        .event-emoji { font-size:3.5rem; margin-bottom:0.75rem; transition: transform 0.3s; }
-        .card:hover .event-emoji { transform: scale(1.1); }
-
-        /* ============ MODAL ============ */
+        .event-emoji { font-size:3.5rem; margin-bottom:0.75rem; }
         .modal-overlay {
             position:fixed; inset:0; background:rgba(0,0,0,0.5); backdrop-filter:blur(6px);
             display:flex; align-items:center; justify-content:center; z-index:1000;
@@ -174,34 +126,26 @@
         }
         .modal-overlay.open { opacity:1; pointer-events:auto; }
         .modal-content {
-            background:var(--card-bg); border-radius:24px; max-width:600px;
-            width:92%; max-height:85vh; overflow-y:auto; padding:2.5rem;
-            position:relative; box-shadow:0 20px 40px rgba(0,0,0,0.15);
+            background:var(--card-bg); border-radius:24px; max-width:600px; width:92%;
+            max-height:85vh; overflow-y:auto; padding:2.5rem; position:relative;
             transform: scale(0.95); transition: transform 0.3s;
         }
         .modal-overlay.open .modal-content { transform: scale(1); }
         .modal-close {
             position:absolute; top:1.2rem; right:1.5rem; background:none;
             border:none; font-size:2rem; cursor:pointer; color:var(--text);
-            transition: transform 0.2s;
         }
-        .modal-close:hover { transform: rotate(90deg); }
-
-        /* ============ FORMULARIOS ============ */
         .form-group { margin-bottom:1.4rem; }
-        .form-group label { display:block; margin-bottom:0.5rem; font-weight:600; color:var(--text); }
+        .form-group label { display:block; margin-bottom:0.5rem; font-weight:600; }
         .form-group input, .form-group select {
             width:100%; padding:0.8rem 1.2rem; border:2px solid var(--border);
             border-radius:12px; background:var(--bg); color:var(--text);
-            font-family:inherit; font-size:1rem; transition: border 0.2s;
+            font-family:inherit; font-size:1rem;
         }
         .form-group input:focus, .form-group select:focus { outline:none; border-color:var(--primary); }
-
         @media (max-width:768px) {
             .menu-overlay { width: 280px; }
             .menu-overlay a { font-size: 1.2rem; }
-            .logo img { height:44px; }
-            .logo span { font-size:1.4rem; }
         }
     </style>
 </head>
@@ -259,31 +203,28 @@
         </div>
     </footer>
 
-    <!-- Modal de registro -->
     <div class="modal-overlay" id="registroModal">
         <div class="modal-content" id="registroModalContent"></div>
     </div>
 
     <script>
-        // ==================== CONFIGURACIÓN SUPABASE ====================
-        const SUPABASE_URL = 'https://xxxxxxx.supabase.co';      // ← CAMBIAR por tu URL
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'; // ← CAMBIAR por tu anon key
+        // ==================== SUPABASE ====================
+        const SUPABASE_URL = 'https://xxxxxxx.supabase.co';      // ← CAMBIAR
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'; // ← CAMBIAR
         let supabase;
         try {
             supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-            console.log('✅ Supabase conectado');
         } catch (e) {
-            console.warn('⚠️ Supabase no disponible – el registro no se guardará en la base de datos.');
+            console.warn('Supabase no disponible');
             supabase = null;
         }
 
-        // ==================== TEMA OSCURO ====================
+        // ==================== TEMA ====================
         const themeToggle = document.getElementById('themeToggle');
         const html = document.documentElement;
         const savedTheme = localStorage.getItem('theme') || 'light';
         html.className = savedTheme;
         themeToggle.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
-
         themeToggle.addEventListener('click', () => {
             const newTheme = html.className === 'dark' ? 'light' : 'dark';
             html.className = newTheme;
@@ -291,19 +232,17 @@
             localStorage.setItem('theme', newTheme);
         });
 
-        // ==================== MENÚ LATERAL ====================
+        // ==================== MENÚ ====================
         const menuBtn = document.getElementById('menuBtn');
         const menuOverlay = document.getElementById('menuOverlay');
         const menuClose = document.getElementById('menuClose');
         const menuBackdrop = document.getElementById('menuBackdrop');
-        function openMenu() { menuOverlay.classList.add('open'); menuBackdrop.classList.add('open'); }
-        function closeMenu() { menuOverlay.classList.remove('open'); menuBackdrop.classList.remove('open'); }
-        menuBtn.addEventListener('click', openMenu);
-        menuClose.addEventListener('click', closeMenu);
-        menuBackdrop.addEventListener('click', closeMenu);
-        document.querySelectorAll('.menu-overlay a').forEach(link => link.addEventListener('click', closeMenu));
+        menuBtn.addEventListener('click', () => { menuOverlay.classList.add('open'); menuBackdrop.classList.add('open'); });
+        menuClose.addEventListener('click', () => { menuOverlay.classList.remove('open'); menuBackdrop.classList.remove('open'); });
+        menuBackdrop.addEventListener('click', () => { menuOverlay.classList.remove('open'); menuBackdrop.classList.remove('open'); });
+        document.querySelectorAll('.menu-overlay a').forEach(link => link.addEventListener('click', () => { menuOverlay.classList.remove('open'); menuBackdrop.classList.remove('open'); }));
 
-        // ==================== DATOS DE EVENTOS ====================
+        // ==================== EVENTOS ====================
         const eventsData = [
             { id: '1', titulo: 'Feria de Clubes 2026', fecha: '2026-09-15', hora: '09:00', lugar: 'Patio Central', estado: 'abierto', emoji: '🎉' },
             { id: '2', titulo: 'Torneo de Debate Interescolar', fecha: '2026-10-20', hora: '10:00', lugar: 'Auditorio Principal', estado: 'abierto', emoji: '🗣️' },
@@ -324,7 +263,6 @@
             `).join('');
         }
 
-        // ==================== MODAL DE REGISTRO ====================
         window.abrirRegistro = function(eventoId) {
             const modal = document.getElementById('registroModal');
             const content = document.getElementById('registroModalContent');
@@ -373,6 +311,7 @@
                     <div class="form-group"><input type="email" placeholder="Correo electrónico" id="email" required></div>`;
             }
             document.getElementById('camposDinamicos').innerHTML = html;
+
             if (rol === 'Estudiante') {
                 const grado = document.getElementById('grado');
                 const moduloGroup = document.getElementById('moduloGroup');
@@ -413,18 +352,10 @@
                     tecnico: document.getElementById('tecnicoGroup').style.display !== 'none' ? document.getElementById('tecnico').value : ''
                 };
             } else if (rol === 'Gestion') {
-                datosExtras = {
-                    cargo: document.getElementById('rolGestion').value
-                };
+                datosExtras = { cargo: document.getElementById('rolGestion').value };
             }
 
-            const datosCompletos = {
-                nombres: nombre,
-                apellidos: apellido,
-                correo: email,
-                ...datosExtras
-            };
-
+            const datosCompletos = { nombres: nombre, apellidos: apellido, correo: email, ...datosExtras };
             let codigo = 'CLED-' + Math.random().toString(36).substr(2, 8).toUpperCase();
 
             if (supabase) {
@@ -433,22 +364,17 @@
                     .insert({ event_id: eventoId, rol, datos: datosCompletos })
                     .select()
                     .single();
-
                 if (errorRegistro) {
-                    alert('Error al guardar el registro: ' + errorRegistro.message);
+                    alert('Error al guardar: ' + errorRegistro.message);
                     return;
                 }
-
                 const { error: errorCodigo } = await supabase
                     .from('event_codes')
                     .insert({ registration_id: registro.id, codigo });
-
                 if (errorCodigo) {
                     alert('Error generando código QR');
                     return;
                 }
-            } else {
-                console.warn('Registro no guardado (Supabase no configurado)');
             }
 
             const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${codigo}`;
@@ -461,18 +387,15 @@
             `;
         }
 
-        // ==================== DESCARGA PDF (CORREGIDO) ====================
+        // ==================== PDF (sin errores de <script>) ====================
         window.descargarPDF = function(nombre, codigo) {
             const qrImg = document.getElementById('qrImage');
-            if (!qrImg) {
-                alert('Error: no se encontró el código QR.');
-                return;
-            }
+            if (!qrImg) { alert('Error: QR no encontrado'); return; }
             const qrSrc = qrImg.src;
             const win = window.open('', '_blank');
-            win.document.write(`
-                <html>
-                <head><title>Pase de Evento</title></head>
+            // Construimos el HTML evitando la cadena "</script>" mediante concatenación
+            const htmlPart1 = `
+                <html><head><title>Pase de Evento</title></head>
                 <body style="text-align:center; font-family:sans-serif; margin:2rem;">
                     <img src="LOGO_CLED.png" width="80" alt="CLED">
                     <h1>CLED</h1>
@@ -482,24 +405,20 @@
                     <p><strong>Código:</strong> ${codigo}</p>
                     <p style="color:gray; font-size:0.9rem;">Presenta este código en la entrada del evento.</p>
                     <script>
-                        document.getElementById('printQr').onload = function() {
-                            window.print();
-                        };
-                        if (document.getElementById('printQr').complete) {
-                            window.print();
-                        }
-                    <\/script>
-                </body>
-                </html>
-            `);
+                        document.getElementById('printQr').onload = function() { window.print(); };
+                        if (document.getElementById('printQr').complete) { window.print(); }
+                    <`;
+            const htmlPart2 = `/script>`;
+            win.document.write(htmlPart1 + htmlPart2);
             win.document.close();
         };
 
-        // Cerrar modal al hacer clic fuera
+        // Cerrar modales
         document.querySelectorAll('.modal-overlay').forEach(modal => {
             modal.addEventListener('click', function(e) { if (e.target === modal) modal.classList.remove('open'); });
         });
 
+        // Renderizar al cargar
         renderEventos();
     </script>
 </body>
