@@ -10,6 +10,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         /* ============ VARIABLES Y TEMAS ============ */
         :root {
@@ -264,6 +265,18 @@
     </div>
 
     <script>
+        // ==================== CONFIGURACIÓN SUPABASE ====================
+        const SUPABASE_URL = 'https://xxxxxxx.supabase.co';      // ← CAMBIAR por tu URL
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'; // ← CAMBIAR por tu anon key
+        let supabase;
+        try {
+            supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            console.log('✅ Supabase conectado');
+        } catch (e) {
+            console.warn('⚠️ Supabase no disponible – el registro no se guardará en la base de datos.');
+            supabase = null;
+        }
+
         // ==================== TEMA OSCURO ====================
         const themeToggle = document.getElementById('themeToggle');
         const html = document.documentElement;
@@ -292,45 +305,12 @@
 
         // ==================== DATOS DE EVENTOS ====================
         const eventsData = [
-            {
-                id: '1',
-                titulo: 'Feria de Clubes 2026',
-                fecha: '2026-09-15',
-                hora: '09:00',
-                lugar: 'Patio Central',
-                estado: 'abierto',
-                emoji: '🎉'
-            },
-            {
-                id: '2',
-                titulo: 'Torneo de Debate Interescolar',
-                fecha: '2026-10-20',
-                hora: '10:00',
-                lugar: 'Auditorio Principal',
-                estado: 'abierto',
-                emoji: '🗣️'
-            },
-            {
-                id: '3',
-                titulo: 'Taller de Liderazgo Juvenil',
-                fecha: '2026-11-05',
-                hora: '14:00',
-                lugar: 'Salón 201',
-                estado: 'cerrado',
-                emoji: '🌟'
-            },
-            {
-                id: '4',
-                titulo: 'Jornada de Voluntariado',
-                fecha: '2026-12-01',
-                hora: '08:00',
-                lugar: 'Playa Guibia',
-                estado: 'abierto',
-                emoji: '🌱'
-            }
+            { id: '1', titulo: 'Feria de Clubes 2026', fecha: '2026-09-15', hora: '09:00', lugar: 'Patio Central', estado: 'abierto', emoji: '🎉' },
+            { id: '2', titulo: 'Torneo de Debate Interescolar', fecha: '2026-10-20', hora: '10:00', lugar: 'Auditorio Principal', estado: 'abierto', emoji: '🗣️' },
+            { id: '3', titulo: 'Taller de Liderazgo Juvenil', fecha: '2026-11-05', hora: '14:00', lugar: 'Salón 201', estado: 'cerrado', emoji: '🌟' },
+            { id: '4', titulo: 'Jornada de Voluntariado', fecha: '2026-12-01', hora: '08:00', lugar: 'Playa Guibia', estado: 'abierto', emoji: '🌱' }
         ];
 
-        // ==================== RENDERIZAR EVENTOS ====================
         function renderEventos() {
             const container = document.getElementById('eventosContainer');
             container.innerHTML = eventsData.map(e => `
@@ -411,25 +391,82 @@
             }
         }
 
-        function registrarEvento(e) {
+        async function registrarEvento(e) {
             e.preventDefault();
-            const nombre = document.getElementById('nombre').value;
-            const apellido = document.getElementById('apellido').value;
-            const codigo = 'CLED-' + Math.random().toString(36).substr(2, 8).toUpperCase();
+            const eventoId = e.target.dataset.evento;
+            const rol = document.getElementById('rol').value;
+            const nombre = document.getElementById('nombre').value.trim();
+            const apellido = document.getElementById('apellido').value.trim();
+            const email = document.getElementById('email').value.trim();
+
+            let datosExtras = {};
+            if (rol === 'Estudiante') {
+                datosExtras = {
+                    grado: document.getElementById('grado').value,
+                    seccion: document.getElementById('seccion').value,
+                    modulo: document.getElementById('moduloGroup').style.display !== 'none' ? document.getElementById('modulo').value : ''
+                };
+            } else if (rol === 'Docente') {
+                datosExtras = {
+                    modalidad: document.getElementById('modalidad').value,
+                    area: document.getElementById('areaGroup').style.display !== 'none' ? document.getElementById('area').value : '',
+                    tecnico: document.getElementById('tecnicoGroup').style.display !== 'none' ? document.getElementById('tecnico').value : ''
+                };
+            } else if (rol === 'Gestion') {
+                datosExtras = {
+                    cargo: document.getElementById('rolGestion').value
+                };
+            }
+
+            const datosCompletos = {
+                nombres: nombre,
+                apellidos: apellido,
+                correo: email,
+                ...datosExtras
+            };
+
+            // Insertar en Supabase si está disponible
+            let codigo = 'CLED-' + Math.random().toString(36).substr(2, 8).toUpperCase();
+            if (supabase) {
+                const { data: registro, error: errorRegistro } = await supabase
+                    .from('event_registrations')
+                    .insert({ event_id: eventoId, rol, datos: datosCompletos })
+                    .select()
+                    .single();
+
+                if (errorRegistro) {
+                    alert('Error al guardar el registro: ' + errorRegistro.message);
+                    return;
+                }
+
+                const { error: errorCodigo } = await supabase
+                    .from('event_codes')
+                    .insert({ registration_id: registro.id, codigo });
+
+                if (errorCodigo) {
+                    alert('Error generando código QR');
+                    return;
+                }
+            } else {
+                // Sin BD, mostramos igual el pase (sin persistencia)
+                console.warn('Registro no guardado (Supabase no configurado)');
+            }
+
             const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${codigo}`;
             document.getElementById('paseDigital').innerHTML = `
                 <h3>✅ Registro exitoso</h3>
                 <p><strong>Código:</strong> ${codigo}</p>
-                <img src="${qrUrl}" alt="QR">
+                <img src="${qrUrl}" alt="QR" id="qrImage">
                 <p style="color:red;">📸 Captura este código.</p>
-                <button class="btn btn-primary" onclick="descargarPDF('${nombre} ${apellido}', '${codigo}')">Descargar PDF</button>`;
+                <button class="btn btn-primary" onclick="descargarPDF('${nombre} ${apellido}', '${codigo}')">Descargar PDF</button>
+            `;
         }
 
-        // ==================== DESCARGA DE PDF (con corrección de impresión) ====================
+        // ==================== DESCARGA PDF CON ESPERA DE IMAGEN ====================
         window.descargarPDF = function(nombre, codigo) {
-            const qrImg = document.querySelector('#paseDigital img');
+            const qrImg = document.getElementById('qrImage');
             if (!qrImg) {
-                alert('Error: no se encontró la imagen del código QR.');
+                alert('Error: no se encontró el código QR.');
                 return;
             }
             const qrSrc = qrImg.src;
@@ -442,14 +479,17 @@
                     <h1>CLED</h1>
                     <h2>Pase de Evento</h2>
                     <p><strong>Participante:</strong> ${nombre}</p>
-                    <img src="${qrSrc}" alt="Código QR" style="margin:1rem 0;">
+                    <img src="${qrSrc}" alt="Código QR" id="printQr">
                     <p><strong>Código:</strong> ${codigo}</p>
                     <p style="color:gray; font-size:0.9rem;">Presenta este código en la entrada del evento.</p>
                     <script>
-                        // Esperar a que las imágenes se carguen antes de imprimir
-                        setTimeout(function() {
+                        document.getElementById('printQr').onload = function() {
                             window.print();
-                        }, 600);
+                        };
+                        // Fallback por si la imagen ya está en caché
+                        if (document.getElementById('printQr').complete) {
+                            window.print();
+                        }
                     </script>
                 </body>
                 </html>
@@ -462,7 +502,6 @@
             modal.addEventListener('click', function(e) { if (e.target === modal) modal.classList.remove('open'); });
         });
 
-        // Renderizar eventos al cargar
         renderEventos();
     </script>
 </body>
