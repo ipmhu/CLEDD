@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,54 +11,221 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
+        /* ============ VARIABLES Y TEMAS ============ */
+        :root {
+            --bg: #FFFFFF;
+            --bg-alt: #F8FAFC;
+            --text: #0F172A;
+            --text-secondary: #64748B;
+            --border: #E2E8F0;
+            --card-bg: #FFFFFF;
+            --header-bg: rgba(255,255,255,0.92);
+            --shadow: 0 4px 6px rgba(0,0,0,0.03);
+            --shadow-hover: 0 12px 28px rgba(0,0,0,0.08);
+            --primary: #0A3D91;
+            --primary-hover: #062757;
+            --gold: #D4AF37;
+            --gold-hover: #b8960f;
+            --transition-speed: 0.25s;
+        }
+
+        .dark {
+            --bg: #0F172A;
+            --bg-alt: #1E293B;
+            --text: #F1F5F9;
+            --text-secondary: #94A3B8;
+            --border: #334155;
+            --card-bg: #1E293B;
+            --header-bg: rgba(15,23,42,0.92);
+            --shadow: 0 4px 6px rgba(0,0,0,0.15);
+            --shadow-hover: 0 12px 28px rgba(0,0,0,0.25);
+        }
+
         * { margin:0; padding:0; box-sizing:border-box; }
-        body { font-family: 'Inter', sans-serif; background: #FFFFFF; color: #0F172A; line-height: 1.6; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            transition: background var(--transition-speed), color var(--transition-speed);
+        }
+
         .container { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; }
-        .main-header { position: fixed; top:0; left:0; right:0; z-index:100; padding:1rem 0; background: rgba(255,255,255,0.95); backdrop-filter:blur(10px); box-shadow:0 2px 10px rgba(0,0,0,0.03); }
-        .header-inner { display:flex; align-items:center; justify-content:space-between; max-width:1200px; margin:0 auto; padding:0 1.5rem; }
+
+        /* ============ HEADER ============ */
+        .main-header {
+            position: fixed; top:0; left:0; right:0; z-index:100; padding:1rem 0;
+            background: var(--header-bg); backdrop-filter:blur(14px);
+            border-bottom: 1px solid var(--border);
+            transition: all var(--transition-speed);
+        }
+        .header-inner {
+            display:flex; align-items:center; justify-content:space-between;
+            max-width:1200px; margin:0 auto; padding:0 1.5rem;
+        }
         .logo { display:flex; align-items:center; gap:0.75rem; }
-        .logo img { height:40px; }
-        .logo span { font-weight:800; font-size:1.5rem; color:#0A3D91; font-family:'Montserrat',sans-serif; }
-        .menu-btn { background:none; border:none; font-size:2rem; cursor:pointer; color:#0A3D91; }
-        .btn { display:inline-flex; align-items:center; gap:0.5rem; padding:0.75rem 1.8rem; border-radius:9999px; font-weight:600; cursor:pointer; border:none; text-decoration:none; transition: all 0.25s; }
-        .btn-primary { background:#0A3D91; color:white; }
-        .btn-primary:hover { background:#062757; transform:translateY(-2px); box-shadow:0 10px 25px rgba(0,0,0,0.1); }
-        .btn-gold { background:#D4AF37; color:#1e293b; }
-        .btn-gold:hover { background:#b8960f; transform:translateY(-2px); box-shadow:0 10px 25px rgba(0,0,0,0.1); }
-        .btn-outline { background:transparent; border:2px solid #E2E8F0; color:#0F172A; }
-        .btn-outline:hover { background:#F1F5F9; }
+        .logo img { height:56px; transition: transform 0.3s; }
+        .logo img:hover { transform: scale(1.05); }
+        .logo span {
+            font-weight:800; font-size:1.8rem; color:var(--primary);
+            font-family:'Montserrat',sans-serif; letter-spacing: -0.5px;
+        }
+        .menu-btn {
+            background:none; border:none; font-size:2rem; cursor:pointer;
+            color:var(--primary); transition: transform 0.2s;
+        }
+        .menu-btn:hover { transform: rotate(90deg); }
+
+        /* ============ BOTONES ============ */
+        .btn {
+            display:inline-flex; align-items:center; gap:0.5rem;
+            padding:0.8rem 2rem; border-radius:9999px; font-weight:600;
+            cursor:pointer; border:none; text-decoration:none;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size:0.95rem;
+        }
+        .btn-primary { background:var(--primary); color:white; }
+        .btn-primary:hover { background:var(--primary-hover); transform:translateY(-2px); box-shadow:0 8px 20px rgba(10,61,145,0.3); }
+        .btn-gold { background:var(--gold); color:#1e293b; }
+        .btn-gold:hover { background:var(--gold-hover); transform:translateY(-2px); box-shadow:0 8px 20px rgba(212,175,55,0.4); }
+        .btn-outline { background:transparent; border:2px solid var(--border); color:var(--text); }
+        .btn-outline:hover { background:var(--border); transform:translateY(-2px); }
         .btn-white { background:transparent; border:2px solid white; color:white; }
-        .btn-white:hover { background:rgba(255,255,255,0.1); }
-        .menu-overlay { position:fixed; inset:0; background:rgba(10,61,145,0.98); z-index:200; display:flex; align-items:center; justify-content:center; opacity:0; pointer-events:none; transition:opacity 0.3s; }
+        .btn-white:hover { background:rgba(255,255,255,0.15); transform:translateY(-2px); }
+
+        .theme-toggle {
+            background:none; border:2px solid var(--border); color:var(--text);
+            padding:0.5rem 1rem; border-radius:9999px; cursor:pointer;
+            font-size:1.2rem; transition: all 0.3s;
+        }
+        .theme-toggle:hover { background:var(--border); }
+
+        /* ============ MENÚ OVERLAY ============ */
+        .menu-overlay {
+            position:fixed; inset:0; background:rgba(10,61,145,0.97); z-index:200;
+            display:flex; align-items:center; justify-content:center;
+            opacity:0; pointer-events:none; transition: opacity 0.35s ease;
+        }
         .menu-overlay.open { opacity:1; pointer-events:auto; }
-        .menu-overlay nav { display:flex; flex-direction:column; gap:1.5rem; text-align:center; }
-        .menu-overlay a { color:white; font-size:1.8rem; font-weight:700; font-family:'Montserrat',sans-serif; }
-        .menu-overlay a:hover { color:#D4AF37; }
-        .menu-close { position:absolute; top:2rem; right:2rem; background:none; border:none; font-size:2.5rem; color:white; cursor:pointer; }
-        .hero { min-height:100vh; display:flex; align-items:center; background:linear-gradient(135deg, #0A3D91 0%, #02111D 100%); color:white; }
-        .hero h1 { font-size: clamp(2.5rem, 6vw, 4.5rem); margin-bottom:1rem; }
+        .menu-overlay nav {
+            display:flex; flex-direction:column; gap:1.8rem; text-align:center;
+        }
+        .menu-overlay a {
+            color:white; font-size:2rem; font-weight:700; font-family:'Montserrat',sans-serif;
+            transition: color 0.2s, transform 0.2s;
+        }
+        .menu-overlay a:hover { color:var(--gold); transform: scale(1.05); }
+        .menu-close {
+            position:absolute; top:2rem; right:2rem;
+            background:none; border:none; font-size:3rem; color:white;
+            cursor:pointer; transition: transform 0.3s;
+        }
+        .menu-close:hover { transform: rotate(90deg); }
+
+        /* ============ HERO ============ */
+        .hero {
+            min-height:100vh; display:flex; align-items:center;
+            background:linear-gradient(135deg, #0A3D91 0%, #02111D 100%);
+            color:white; position:relative; overflow:hidden;
+        }
+        .hero::before {
+            content:''; position:absolute; top:-30%; right:-20%;
+            width:600px; height:600px;
+            background:radial-gradient(circle, rgba(212,175,55,0.12) 0%, transparent 70%);
+            border-radius:50%;
+            animation: float 8s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translate(0,0); }
+            50% { transform: translate(-30px, 20px); }
+        }
+        .hero h1 { font-size: clamp(2.8rem, 7vw, 5rem); margin-bottom:1rem; animation: fadeInUp 1s; }
+
+        /* ============ SECCIONES ============ */
         .section { padding:5rem 0; }
-        .section-title { font-size:2.25rem; font-weight:800; margin-bottom:1rem; color:#0A3D91; }
-        .card { background:#FFFFFF; border-radius:16px; padding:1.75rem; box-shadow:0 4px 6px rgba(0,0,0,0.03); border:1px solid #E2E8F0; transition:all 0.25s; }
-        .card:hover { transform:translateY(-6px); box-shadow:0 10px 25px rgba(0,0,0,0.08); }
-        .grid-2 { display:grid; grid-template-columns: repeat(auto-fit, minmax(280px,1fr)); gap:1.5rem; }
-        .grid-3 { display:grid; grid-template-columns: repeat(auto-fit, minmax(240px,1fr)); gap:1.5rem; }
-        .grid-4 { display:grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap:1.25rem; }
-        .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.5); backdrop-filter:blur(4px); display:flex; align-items:center; justify-content:center; z-index:1000; opacity:0; pointer-events:none; transition:opacity 0.3s; }
+        .section-title {
+            font-size:2.5rem; font-weight:800; margin-bottom:1.2rem;
+            color:var(--primary); transition: color 0.3s;
+        }
+        .card {
+            background:var(--card-bg); border-radius:20px; padding:2rem;
+            box-shadow:var(--shadow); border:1px solid var(--border);
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .card:hover {
+            transform:translateY(-8px);
+            box-shadow:var(--shadow-hover);
+        }
+
+        .grid-2 { display:grid; grid-template-columns: repeat(auto-fit, minmax(280px,1fr)); gap:2rem; }
+        .grid-3 { display:grid; grid-template-columns: repeat(auto-fit, minmax(260px,1fr)); gap:2rem; }
+        .grid-4 { display:grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap:1.5rem; }
+
+        /* ============ MODALES ============ */
+        .modal-overlay {
+            position:fixed; inset:0; background:rgba(0,0,0,0.5); backdrop-filter:blur(6px);
+            display:flex; align-items:center; justify-content:center; z-index:1000;
+            opacity:0; pointer-events:none; transition:opacity 0.35s;
+        }
         .modal-overlay.open { opacity:1; pointer-events:auto; }
-        .modal-content { background:#FFFFFF; border-radius:16px; max-width:700px; width:90%; max-height:85vh; overflow-y:auto; padding:2rem; position:relative; }
-        .modal-close { position:absolute; top:1rem; right:1.25rem; background:none; border:none; font-size:1.75rem; cursor:pointer; color:#0F172A; }
-        .form-group { margin-bottom:1.25rem; }
-        .form-group label { display:block; margin-bottom:0.4rem; font-weight:600; }
-        .form-group input, .form-group select { width:100%; padding:0.7rem 1rem; border:2px solid #E2E8F0; border-radius:8px; background:#FFFFFF; font-family:inherit; font-size:0.95rem; }
-        .form-group input:focus, .form-group select:focus { outline:none; border-color:#0A3D91; }
-        .footer { background:#0F172A; color:white; padding:3rem 0; margin-top:4rem; }
-        .footer-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap:2rem; }
-        .search-results { background:white; border-radius:8px; margin-top:0.5rem; text-align:left; max-height:200px; overflow-y:auto; }
-        .search-results div { padding:0.5rem 1rem; cursor:pointer; color:#0F172A; }
-        .search-results div:hover { background:#F1F5F9; }
-        .club-emoji, .event-emoji { font-size:3rem; text-align:center; margin-bottom:0.5rem; }
-        @media (max-width:768px) { .menu-overlay a { font-size:1.4rem; } }
+        .modal-content {
+            background:var(--card-bg); border-radius:24px; max-width:700px;
+            width:92%; max-height:85vh; overflow-y:auto; padding:2.5rem;
+            position:relative; box-shadow:0 20px 40px rgba(0,0,0,0.15);
+            transform: scale(0.95); transition: transform 0.3s;
+        }
+        .modal-overlay.open .modal-content { transform: scale(1); }
+        .modal-close {
+            position:absolute; top:1.2rem; right:1.5rem; background:none;
+            border:none; font-size:2rem; cursor:pointer; color:var(--text);
+            transition: transform 0.2s;
+        }
+        .modal-close:hover { transform: rotate(90deg); }
+
+        /* ============ FORMULARIOS ============ */
+        .form-group { margin-bottom:1.4rem; }
+        .form-group label { display:block; margin-bottom:0.5rem; font-weight:600; color:var(--text); }
+        .form-group input, .form-group select {
+            width:100%; padding:0.8rem 1.2rem; border:2px solid var(--border);
+            border-radius:12px; background:var(--bg); color:var(--text);
+            font-family:inherit; font-size:1rem; transition: border 0.2s;
+        }
+        .form-group input:focus, .form-group select:focus { outline:none; border-color:var(--primary); }
+
+        /* ============ FOOTER ============ */
+        .footer {
+            background:#0F172A; color:white; padding:4rem 0; margin-top:4rem;
+        }
+        .footer-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap:2.5rem; }
+
+        /* ============ BUSCADOR ============ */
+        .search-results {
+            background:var(--card-bg); border-radius:12px; margin-top:0.75rem;
+            text-align:left; max-height:250px; overflow-y:auto; box-shadow:var(--shadow);
+        }
+        .search-results div {
+            padding:0.75rem 1.2rem; cursor:pointer; color:var(--text);
+            transition: background 0.15s;
+        }
+        .search-results div:hover { background:var(--border); }
+
+        .club-emoji, .event-emoji {
+            font-size:3.5rem; text-align:center; margin-bottom:0.75rem;
+            transition: transform 0.3s;
+        }
+        .card:hover .club-emoji, .card:hover .event-emoji { transform: scale(1.1); }
+
+        @keyframes fadeInUp {
+            from { opacity:0; transform:translateY(30px); }
+            to { opacity:1; transform:translateY(0); }
+        }
+
+        @media (max-width:768px) {
+            .menu-overlay a { font-size:1.5rem; }
+            .logo img { height:44px; }
+            .logo span { font-size:1.4rem; }
+        }
     </style>
 </head>
 <body>
@@ -69,6 +236,7 @@
                 <span>CLED</span>
             </div>
             <div style="display:flex; align-items:center; gap:1rem;">
+                <button class="theme-toggle" id="themeToggle" aria-label="Cambiar tema">🌓</button>
                 <a href="login.html" class="btn btn-primary">Campus CLED</a>
                 <button class="menu-btn" id="menuBtn" aria-label="Abrir menú">☰</button>
             </div>
@@ -107,7 +275,7 @@
         <div class="container"><div class="grid-4" id="statsContainer"></div></div>
     </section>
 
-    <section id="clubes" class="section" style="background:#F8FAFC;">
+    <section id="clubes" class="section" style="background:var(--bg-alt);">
         <div class="container">
             <h2 class="section-title">Clubes Destacados</h2>
             <div class="grid-3" id="clubesContainer"></div>
@@ -121,7 +289,7 @@
         </div>
     </section>
 
-    <section id="noticias" class="section" style="background:#F8FAFC;">
+    <section id="noticias" class="section" style="background:var(--bg-alt);">
         <div class="container">
             <h2 class="section-title">Noticias Recientes</h2>
             <div class="grid-3" id="noticiasContainer"></div>
@@ -135,10 +303,10 @@
         </div>
     </section>
 
-    <section class="section" style="background:#0A3D91; color:white;">
+    <section class="section" style="background:var(--primary); color:white;">
         <div class="container" style="text-align:center;">
             <h2 style="color:white;">Buscador</h2>
-            <input type="text" id="globalSearch" placeholder="Buscar..." style="width:100%;max-width:500px;padding:0.8rem;border-radius:999px;border:none;margin-top:1rem;">
+            <input type="text" id="globalSearch" placeholder="Buscar..." style="width:100%;max-width:500px;padding:0.9rem;border-radius:999px;border:none;margin-top:1rem;font-size:1rem;">
             <div id="searchResults" class="search-results" style="display:none;"></div>
         </div>
     </section>
@@ -146,7 +314,7 @@
     <footer class="footer">
         <div class="container footer-grid">
             <div>
-                <img src="LOGO_CLED.png" height="36" alt="CLED">
+                <img src="LOGO_CLED.png" height="48" alt="CLED">
                 <p style="margin-top:0.5rem;">Formando líderes desde 2020.</p>
             </div>
             <div>
@@ -171,22 +339,31 @@
     <div class="modal-overlay" id="registroModal"><div class="modal-content" id="registroModalContent"></div></div>
 
     <script>
-        // ==================== MENÚ HAMBURGUESA ====================
-        (function() {
-            const menuBtn = document.getElementById('menuBtn');
-            const menuOverlay = document.getElementById('menuOverlay');
-            const menuClose = document.getElementById('menuClose');
-            menuBtn.addEventListener('click', () => menuOverlay.classList.add('open'));
-            menuClose.addEventListener('click', () => menuOverlay.classList.remove('open'));
-            document.querySelectorAll('.menu-overlay a').forEach(link => {
-                link.addEventListener('click', () => menuOverlay.classList.remove('open'));
-            });
-        })();
+        // ==================== TEMA OSCURO ====================
+        const themeToggle = document.getElementById('themeToggle');
+        const html = document.documentElement;
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        html.className = savedTheme;
+        themeToggle.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
 
-        // ==================== DATOS DEL PORTAL ====================
-        // Para agregar un nuevo elemento, copia un bloque y edita los valores.
+        themeToggle.addEventListener('click', () => {
+            const newTheme = html.className === 'dark' ? 'light' : 'dark';
+            html.className = newTheme;
+            themeToggle.textContent = newTheme === 'dark' ? '☀️' : '🌙';
+            localStorage.setItem('theme', newTheme);
+        });
 
-        // Estadísticas (1 objeto por tarjeta)
+        // ==================== MENÚ ====================
+        const menuBtn = document.getElementById('menuBtn');
+        const menuOverlay = document.getElementById('menuOverlay');
+        const menuClose = document.getElementById('menuClose');
+        menuBtn.addEventListener('click', () => menuOverlay.classList.add('open'));
+        menuClose.addEventListener('click', () => menuOverlay.classList.remove('open'));
+        document.querySelectorAll('.menu-overlay a').forEach(link => {
+            link.addEventListener('click', () => menuOverlay.classList.remove('open'));
+        });
+
+        // ==================== DATOS ====================
         const statsData = [
             { n: 520, l: 'Miembros activos' },
             { n: 7, l: 'Clubes' },
@@ -197,85 +374,36 @@
             { n: 280, l: 'Certificados' }
         ];
 
-        // Facilitadores (staff) – ejemplo de cómo se verían, no se muestran en esta página
-        const staffData = [
-            { nombre: 'Prof. Robelin Mejías', rol: 'Facilitador Comunicación', foto: 'ROBELINMEJIAS.jpeg' },
-            { nombre: 'Profa. Ana Patricia Sánchez', rol: 'Facilitador Debate', foto: 'https://placehold.co/100?text=AS' },
-            { nombre: 'Prof. Luis Manuel Vargas', rol: 'Facilitador Lectura', foto: 'https://placehold.co/100?text=LV' },
-            // Copia y pega este bloque para agregar otro facilitador
-        ];
-
-        // Clubes (sin fotos de facilitadores)
         const clubsData = [
-            {
-                id: '1',
-                nombre: 'Comunicación Social y Periodismo',
-                descripcion: 'Espacio dedicado al desarrollo de habilidades comunicacionales, periodísticas y de producción audiovisual.',
-                emoji: '📰'
-            },
-            {
-                id: '2',
-                nombre: 'Debate',
-                descripcion: 'Club de argumentación, oratoria y pensamiento crítico donde se aprende a debatir con respeto y fundamentos.',
-                emoji: '🎤'
-            },
-            {
-                id: '3',
-                nombre: 'Lectura',
-                descripcion: 'Fomento de la lectura crítica y el análisis literario a través de tertulias y talleres.',
-                emoji: '📚'
-            },
-            {
-                id: '4',
-                nombre: 'Arte',
-                descripcion: 'Exploración de las artes plásticas, dibujo, pintura y expresión creativa.',
-                emoji: '🎨'
-            },
-            {
-                id: '5',
-                nombre: 'Baile',
-                descripcion: 'Danza contemporánea, folclore, ritmos latinos y expresión corporal.',
-                emoji: '💃'
-            },
-            {
-                id: '6',
-                nombre: 'Orientación y Vocación Universitaria',
-                descripcion: 'Guía para descubrir intereses profesionales y planificar el futuro académico.',
-                emoji: '🎓'
-            },
-            {
-                id: '7',
-                nombre: 'Voluntariado y Acción Social',
-                descripcion: 'Proyectos solidarios y servicio a la comunidad para generar impacto social positivo.',
-                emoji: '🤝'
-            }
-            // Copia y pega un bloque completo para añadir un nuevo club
+            { id: '1', nombre: 'Comunicación Social y Periodismo', descripcion: 'Espacio dedicado al desarrollo de habilidades comunicacionales, periodísticas y de producción audiovisual.', emoji: '📰' },
+            { id: '2', nombre: 'Debate', descripcion: 'Club de argumentación, oratoria y pensamiento crítico donde se aprende a debatir con respeto y fundamentos.', emoji: '🎤' },
+            { id: '3', nombre: 'Lectura', descripcion: 'Fomento de la lectura crítica y el análisis literario a través de tertulias y talleres.', emoji: '📚' },
+            { id: '4', nombre: 'Arte', descripcion: 'Exploración de las artes plásticas, dibujo, pintura y expresión creativa.', emoji: '🎨' },
+            { id: '5', nombre: 'Baile', descripcion: 'Danza contemporánea, folclore, ritmos latinos y expresión corporal.', emoji: '💃' },
+            { id: '6', nombre: 'Orientación y Vocación Universitaria', descripcion: 'Guía para descubrir intereses profesionales y planificar el futuro académico.', emoji: '🎓' },
+            { id: '7', nombre: 'Voluntariado y Acción Social', descripcion: 'Proyectos solidarios y servicio a la comunidad para generar impacto social positivo.', emoji: '🤝' }
         ];
 
-        // Eventos
         const eventsData = [
-            { id: '1', titulo: 'Feria de Clubes 2026', descripcion: 'Exhibición de todos los clubes del CLED.', fecha: '2026-09-15', hora: '09:00', lugar: 'Patio Central', estado: 'abierto', cupos: 200, emoji: '🎉' },
-            { id: '2', titulo: 'Torneo de Debate Interescolar', descripcion: 'Competencia regional de debate.', fecha: '2026-10-20', hora: '10:00', lugar: 'Auditorio Principal', estado: 'abierto', cupos: 80, emoji: '🗣️' },
-            { id: '3', titulo: 'Taller de Liderazgo Juvenil', descripcion: 'Invitado internacional compartirá claves para el liderazgo.', fecha: '2026-11-05', hora: '14:00', lugar: 'Salón 201', estado: 'cerrado', cupos: 50, emoji: '🌟' },
-            { id: '4', titulo: 'Jornada de Voluntariado', descripcion: 'Limpieza de playas y reforestación.', fecha: '2026-12-01', hora: '08:00', lugar: 'Playa Guibia', estado: 'abierto', cupos: 100, emoji: '🌱' }
+            { id: '1', titulo: 'Feria de Clubes 2026', fecha: '2026-09-15', hora: '09:00', lugar: 'Patio Central', estado: 'abierto', emoji: '🎉' },
+            { id: '2', titulo: 'Torneo de Debate Interescolar', fecha: '2026-10-20', hora: '10:00', lugar: 'Auditorio Principal', estado: 'abierto', emoji: '🗣️' },
+            { id: '3', titulo: 'Taller de Liderazgo Juvenil', fecha: '2026-11-05', hora: '14:00', lugar: 'Salón 201', estado: 'cerrado', emoji: '🌟' },
+            { id: '4', titulo: 'Jornada de Voluntariado', fecha: '2026-12-01', hora: '08:00', lugar: 'Playa Guibia', estado: 'abierto', emoji: '🌱' }
         ];
 
-        // Noticias
         const noticiasData = [
-            { titulo: 'Inauguración del año escolar CLED 2026', contenido: 'Con gran entusiasmo iniciamos las actividades del Club de Liderazgo Estudiantil y Desarrollo...', fecha: '2026-08-20', imagen: 'https://placehold.co/400x150?text=Inauguración', club: 'General' },
-            { titulo: 'Club de Debate gana primer lugar nacional', contenido: 'Nuestro equipo de debate se coronó campeón en el Torneo Nacional Interescolar...', fecha: '2026-07-10', imagen: 'https://placehold.co/400x150?text=Debate+Campeón', club: 'Debate' },
-            { titulo: 'Nuevo taller de periodismo digital', contenido: 'El club de Comunicación Social abre inscripciones para el taller de redacción...', fecha: '2026-09-01', imagen: 'https://placehold.co/400x150?text=Taller+Periodismo', club: 'Comunicación' }
+            { titulo: 'Inauguración del año escolar CLED 2026', contenido: 'Con gran entusiasmo iniciamos las actividades...', fecha: '2026-08-20', imagen: 'https://placehold.co/400x150?text=Inauguración', club: 'General' },
+            { titulo: 'Club de Debate gana primer lugar nacional', contenido: 'Nuestro equipo de debate se coronó campeón...', fecha: '2026-07-10', imagen: 'https://placehold.co/400x150?text=Debate+Campeón', club: 'Debate' },
+            { titulo: 'Nuevo taller de periodismo digital', contenido: 'El club de Comunicación Social abre inscripciones...', fecha: '2026-09-01', imagen: 'https://placehold.co/400x150?text=Taller+Periodismo', club: 'Comunicación' }
         ];
 
-        // Testimonios
         const testimoniosData = [
-            { texto: 'Gracias al CLED descubrí mi pasión por el periodismo. Ahora soy locutor en una emisora local.', autor: 'Pedro Guzmán', rol: 'Estudiante', foto: 'https://placehold.co/80?text=PG' },
-            { texto: 'Ver el crecimiento de los chicos en debate es increíble. El CLED transforma vidas.', autor: 'Ana Patricia Sánchez', rol: 'Facilitadora', foto: 'https://placehold.co/80?text=AS' },
-            { texto: 'Los eventos del CLED son impecables. Organización de primer nivel.', autor: 'Lic. Ramón Emilio', rol: 'Invitado', foto: 'https://placehold.co/80?text=RE' }
+            { texto: 'Gracias al CLED descubrí mi pasión por el periodismo.', autor: 'Pedro Guzmán', rol: 'Estudiante', foto: 'https://placehold.co/80?text=PG' },
+            { texto: 'Ver el crecimiento de los chicos en debate es increíble.', autor: 'Ana Patricia Sánchez', rol: 'Facilitadora', foto: 'https://placehold.co/80?text=AS' },
+            { texto: 'Los eventos del CLED son impecables.', autor: 'Lic. Ramón Emilio', rol: 'Invitado', foto: 'https://placehold.co/80?text=RE' }
         ];
 
-        // ==================== FUNCIONES DE RENDERIZADO ====================
-
+        // ==================== RENDERIZADO ====================
         function renderStats() {
             document.getElementById('statsContainer').innerHTML = statsData.map(s => 
                 `<div class="card" style="text-align:center;"><h3>${s.n}+</h3><p>${s.l}</p></div>`
@@ -286,25 +414,22 @@
             document.getElementById('clubesContainer').innerHTML = clubsData.map(c => `
                 <div class="card" style="text-align:center;">
                     <div class="club-emoji">${c.emoji}</div>
-                    <h3 style="margin-bottom:0.5rem;">${c.nombre}</h3>
-                    <p style="font-size:0.95rem;">${c.descripcion}</p>
+                    <h3>${c.nombre}</h3>
+                    <p style="color:var(--text-secondary);">${c.descripcion}</p>
                     <button class="btn btn-outline" onclick="verClub('${c.id}')">Ver club</button>
                 </div>`).join('');
         }
 
-        // Función global para mostrar modal de club
         window.verClub = function(id) {
             const club = clubsData.find(c => c.id === id);
             if (!club) return;
-            const modal = document.getElementById('clubModal');
-            const content = document.getElementById('clubModalContent');
-            content.innerHTML = `
+            document.getElementById('clubModalContent').innerHTML = `
                 <button class="modal-close" onclick="document.getElementById('clubModal').classList.remove('open')">&times;</button>
-                <div style="text-align:center;font-size:4rem;">${club.emoji}</div>
-                <h2 style="margin-top:1rem; text-align:center;">${club.nombre}</h2>
-                <p style="text-align:center;">${club.descripcion}</p>
-                <button class="btn btn-gold" style="display:block; margin:1.5rem auto 0;" onclick="alert('Inscripción (próximamente)')">Inscribirme</button>`;
-            modal.classList.add('open');
+                <div style="text-align:center;font-size:5rem;">${club.emoji}</div>
+                <h2 style="text-align:center;">${club.nombre}</h2>
+                <p style="text-align:center;color:var(--text-secondary);">${club.descripcion}</p>
+                <button class="btn btn-gold" style="display:block; margin:2rem auto 0;">Inscribirme</button>`;
+            document.getElementById('clubModal').classList.add('open');
         };
 
         function renderEventos() {
@@ -318,7 +443,6 @@
                 </div>`).join('');
         }
 
-        // Modal de registro (sin cambios)
         window.abrirRegistro = function(eventoId) {
             const modal = document.getElementById('registroModal');
             const content = document.getElementById('registroModalContent');
@@ -386,7 +510,6 @@
 
         function registrarEvento(e) {
             e.preventDefault();
-            const eventoId = e.target.dataset.evento;
             const nombre = document.getElementById('nombre').value;
             const apellido = document.getElementById('apellido').value;
             const codigo = 'CLED-' + Math.random().toString(36).substr(2, 8).toUpperCase();
@@ -395,17 +518,17 @@
                 <h3>✅ Registro exitoso</h3>
                 <p><strong>Código:</strong> ${codigo}</p>
                 <img src="${qrUrl}" alt="QR">
-                <p style="color:red;">📸 Captura este código. Sin él no podrás acceder al evento.</p>
-                <button class="btn btn-primary" onclick="descargarPDF('${nombre} ${apellido}', '${eventoId}', '${codigo}')">Descargar PDF</button>`;
+                <p style="color:red;">📸 Captura este código.</p>
+                <button class="btn btn-primary" onclick="descargarPDF('${nombre} ${apellido}', '${codigo}')">Descargar PDF</button>`;
         }
 
-        window.descargarPDF = function(nombre, eventoId, codigo) {
+        window.descargarPDF = function(nombre, codigo) {
             const qrImg = document.querySelector('#paseDigital img').src;
             const win = window.open('', '_blank');
             win.document.write(`
                 <html><head><title>Pase de Evento</title></head><body style="text-align:center;font-family:sans-serif;">
                     <img src="LOGO_CLED.png" width="80"><h1>CLED</h1>
-                    <h2>Pase de Evento</h2><p>${nombre}</p><p>Evento ID: ${eventoId}</p>
+                    <h2>Pase de Evento</h2><p>${nombre}</p>
                     <img src="${qrImg}"><p>Código: ${codigo}</p>
                 </body></html>`);
             win.document.close();
@@ -415,11 +538,11 @@
         function renderNoticias() {
             document.getElementById('noticiasContainer').innerHTML = noticiasData.map(n => `
                 <div class="card">
-                    <img src="${n.imagen}" style="width:100%;border-radius:12px;">
+                    <img src="${n.imagen}" style="width:100%;border-radius:12px;margin-bottom:1rem;">
                     <h3>${n.titulo}</h3>
-                    <p>📰 ${n.club} | ${n.fecha}</p>
-                    <p>${n.contenido.substring(0,100)}...</p>
-                    <a href="#" style="color:#0A3D91; font-weight:600;">Leer más</a>
+                    <p style="color:var(--text-secondary);">📰 ${n.club} | ${n.fecha}</p>
+                    <p>${n.contenido}...</p>
+                    <a href="#" style="color:var(--primary); font-weight:600;">Leer más</a>
                 </div>`).join('');
         }
 
@@ -429,11 +552,10 @@
                     <img src="${t.foto}" width="60" style="border-radius:50%;margin-bottom:1rem;">
                     <p>"${t.texto}"</p>
                     <strong>${t.autor}</strong>
-                    <p style="color:#64748B;">${t.rol}</p>
+                    <p style="color:var(--text-secondary);">${t.rol}</p>
                 </div>`).join('');
         }
 
-        // Buscador
         document.getElementById('globalSearch').addEventListener('input', function() {
             const q = this.value.trim().toLowerCase();
             const resultsDiv = document.getElementById('searchResults');
@@ -447,14 +569,14 @@
             resultsDiv.style.display = 'block';
         });
 
-        // Iniciar la interfaz
+        // Iniciar interfaz
         renderStats();
         renderClubes();
         renderEventos();
         renderNoticias();
         renderTestimonios();
 
-        // Cerrar modales al hacer clic fuera del contenido
+        // Cerrar modales al hacer clic fuera
         document.querySelectorAll('.modal-overlay').forEach(modal => {
             modal.addEventListener('click', function(e) { if (e.target === modal) modal.classList.remove('open'); });
         });
